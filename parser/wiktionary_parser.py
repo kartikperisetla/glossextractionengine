@@ -11,13 +11,21 @@ from extractor.wiktionary_extractor import WiktionaryExtractor
 
 WIKTIONARY_TITLE_KEYWORD = "wiktionary"
 
+# class to parse wiktionary dataset
 class WiktionaryParser(BaseParser):
-    #constructor
-    def __init__(self):
-            self.current_data = ""
-            self.title = None
-            self.text = None
-            self.file = open("result.txt", "w")
+    # #constructor
+    # def __init__(self, file_name):
+    #     # invoking base class constructor
+    #     super(WiktionaryParser, self).__init__(file_name)
+    #     self.custom_init(file_name)
+
+    def custom_init(self, file_name):
+        self.current_data = ""
+        self.title = None
+        self.text = None
+        self.file_name = file_name
+
+        print "\nWiktionaryParser:init"
 
     # when parser comes across starting of an element
     def startElement(self, tag, attributes):
@@ -70,3 +78,12 @@ class WiktionaryParser(BaseParser):
 
         # clear the content buffer
         self.flush()
+
+    def run(self):
+        parser = xml.sax.make_parser()
+        parser.setFeature(xml.sax.handler.feature_namespaces, 0)
+
+        Handler = self
+        parser.setContentHandler(Handler)
+        print "\nwiktionary_parser:run:parsing start"
+        parser.parse(self.file_name)
