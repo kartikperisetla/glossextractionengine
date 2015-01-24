@@ -79,7 +79,7 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
                         try:
                             # filtering out titles containing KEYWORD
                             if not WIKTIONARY_TITLE_KEYWORD in self.title.lower():
-                                _buffered_result += self.title.strip() + "| " + definition_instance + "\n"
+                                _buffered_result += "1 '" + self.title.strip() + " | " + definition_instance + "\n"
                         except:
                             pass
                 # save the definitions
