@@ -93,7 +93,7 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
             if len(_non_def_result) > 0:
                 for non_definition_instance in _non_def_result:
                     if self.apply_filter("length_filter","LengthFilter",non_definition_instance,3):
-                        _buffered_result += "0 | " + str(non_definition_instance) + "\n"
+                        _buffered_result += "0 '" + article_title.encode("utf-8") + " | " + str(non_definition_instance) + "\n"
 
                 # save the non definitions
                 self.save_non_definitions(_buffered_result)
