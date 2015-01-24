@@ -98,6 +98,7 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
                 # save the non definitions
                 self.save_non_definitions(_buffered_result)
 
+    # method to start this parser thread
     def run(self):
         parser = xml.sax.make_parser()
         parser.setFeature(xml.sax.handler.feature_namespaces, 0)
