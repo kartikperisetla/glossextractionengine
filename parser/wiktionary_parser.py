@@ -12,7 +12,7 @@ from extractor.wiktionary_extractor import WiktionaryExtractor
 WIKTIONARY_TITLE_KEYWORD = "wiktionary"
 
 # class to parse wiktionary dataset
-class WiktionaryParser(BaseParser):
+class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
     # #constructor
     # def __init__(self, file_name):
     #     # invoking base class constructor
@@ -52,6 +52,7 @@ class WiktionaryParser(BaseParser):
             pass
         elif self.current_data == "text":    # reading the text of the article
             _article_raw_text = self.text.encode('utf-8')
+            self.title = self.title.strip()
 
             # invoking method to get definitions from article body
             _extractor_instance = WiktionaryExtractor()
@@ -65,7 +66,7 @@ class WiktionaryParser(BaseParser):
                         try:
                             # filtering out titles containing KEYWORD
                             if not WIKTIONARY_TITLE_KEYWORD in self.title.lower():
-                                _buffered_result += self.title + "| " + definition_instance + "\n"
+                                _buffered_result += self.title.strip() + "| " + definition_instance + "\n"
                         except:
                             pass
                     # save the definitions
@@ -73,11 +74,12 @@ class WiktionaryParser(BaseParser):
 
             # get non definitional sentences
             _buffered_result = _extractor_instance.extract_non_definitions(self.title)
-            # save the non definitions
-            self.save_non_definitions(_buffered_result)
+            if not _buffered_result is None:
+                # save the non definitions
+                self.save_non_definitions(_buffered_result)
 
-        # clear the content buffer
-        self.flush()
+            # clear the content buffer
+            self.flush()
 
     def run(self):
         parser = xml.sax.make_parser()
@@ -87,3 +89,4 @@ class WiktionaryParser(BaseParser):
         parser.setContentHandler(Handler)
         print "\nwiktionary_parser:run:parsing start"
         parser.parse(self.file_name)
+        print "\nwiktionary_parser:run:parsing complete!"

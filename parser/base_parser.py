@@ -43,16 +43,18 @@ class BaseParser(threading.Thread):
 
     # method to save the buffer content to definitions
     def save_definitions(self, buffer):
-        self.def_file_object = open(self.def_file_name, "a")
-        self.def_file_object.write(buffer.encode('utf-8'))
-        self.def_file_object.close()
+        if not buffer is None :
+            self.def_file_object = open(self.def_file_name, "a")
+            self.def_file_object.write(buffer)
+            self.def_file_object.close()
 
 
     # method to save the buffer content to non definitions
     def save_non_definitions(self, buffer):
-        self.non_def_file_object = open(self.non_def_file_name, "a")
-        self.non_def_file_object.write(buffer.encode('utf-8'))
-        self.non_def_file_object.close()
+        if not buffer is None :
+            self.non_def_file_object = open(self.non_def_file_name, "a")
+            self.non_def_file_object.write(buffer)
+            self.non_def_file_object.close()
 
 
 

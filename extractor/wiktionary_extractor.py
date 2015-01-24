@@ -1,5 +1,6 @@
 __author__ = 'kartik'
 from utils.wikipedia_util import WikipediaConnector
+import re
 
 # class to perform extraction operations on wiktionary raw article text
 class WiktionaryExtractor:
@@ -70,3 +71,15 @@ class WiktionaryExtractor:
             for line in result:
                 buff += "0 | " + str(line).decode('utf-8') + "\n"
             return buff.encode('utf-8')
+
+    # method to cleanup the definition
+    def cleanup(self, definition):
+        result = re.sub('{{.*?}}', '', definition)
+        result = re.sub('{{.*?}', '', result)
+        result = re.sub("''", '', result)
+        result = re.sub('\[\[', '', result)
+        result = re.sub(']]', '', result)
+        result = re.sub('<ref.*?>', '', result)
+        result = re.sub('</ref>', '', result)
+        result = re.sub('#.+|', '', result)
+        return result
