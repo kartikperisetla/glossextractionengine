@@ -29,6 +29,17 @@ class BaseParser(threading.Thread):
         # creates new files
         self.close_files()
 
+        # filters for definitional sentences
+        self.filters_for_definitions = []
+        # transformations for definitional sentences
+        self.transformations_for_definitions = []
+
+        # filter for non-definitional sentences
+        self.filters_for_non_definitions = []
+        # transformations for non-definitional sentences
+        self.transformations_for_non_definitions = []
+
+
     # method for custom initializer
     def custom_init(self, *kargs):
         # CAN BE OVERRIDEN BY DERIVED CLASS
@@ -64,16 +75,15 @@ class BaseParser(threading.Thread):
     # filter_class: name of the filter class
     # sentence: sentence on which to apply given filter
     # returns the boolean response whether given sentence satisfies given filter rules
-    def apply_filter(self, module_name, filter_class, sentence, min_length):
-        if not self.filter_collection is None:
-            key = module_name+":"+filter_class
-            # look if requested filter is present in filter collection provided by StartupContext
-            if self.filter_collection.has_key(key):
-                 # lookup filter instance
-                _filter_instance = self.filter_collection[key]
-                # return the filter response for given sentence
-                return _filter_instance.filter(sentence)
+    def apply_filter(self, filter_collection, sentence):
+        if not filter_collection is None:
+            for _filter_instance in filter_collection:
+                response = _filter_instance.filter(sentence)
+                if response is False:
+                    return False
 
+            # passed all filters
+            return True
 
 
 

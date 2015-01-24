@@ -2,13 +2,18 @@ __author__ = 'kartik'
 
 import os, sys
 import xml
-import parser
 import importlib
+import parser
+from parser import *
+
 
 # adding parser package to path
 sys.path.append("../parser")
 sys.path.append("../filter")
 
+from wiktionary_parser import WiktionaryParser
+from wikipedia_parser import WikipediaParser
+from filter.length_filter import *
 
 # usage : run.py operation_mode file
 # operation_mode : wiktionary / wikipedia
@@ -21,21 +26,6 @@ class StartupContext:
     def __init__(self):
         self.parser_collection = {}
         self.filter_collection = {}
-
-    # method that registers a filter
-    # param:
-    # module_name: name of the module where filter class is located
-    # filter_class: name of the filter class in provided module
-    def register_filter(self, module_name, filter_class_name):
-        key = module_name+":"+filter_class_name
-
-        module = __import__(module_name)
-        filter_class = getattr(module, filter_class_name)
-        _filter_instance = filter_class()
-        _filter_instance.min_length = MIN_SENTENCE_LEN
-        self.filter_collection[key] = _filter_instance
-
-
     # These filters are consumed by BaseParser in apply_filter method
 
     # method that registers a parser to parse target file
@@ -43,36 +33,25 @@ class StartupContext:
         key = module_name+":"+parser_class
         self.parser_collection[key] = target_file
 
-    # method that launches parser threads
-    def launch_parser(self):
-        for key, target_file in self.parser_collection.iteritems():
-            items = key.split(":")
-            module_name = items[0]
-            module = __import__(module_name)
-            parser_class = items[1]
-            _class = getattr(module, parser_class)
-
-            # dynamic instantiation of instance
-            instance = _class(target_file)
-            # providing parser instance with registered filters
-            instance.filter_collection = self.filter_collection
-            # start the parser thread
-            instance.start()
-
-
-    def start(self):
-        self.launch_parser()
-        # self.launch_sampler()
-        # self.launch_modeler()
-        # self.launch_engine()
+    # def start(self):
+    #     self.launch_parser()
+    #     # self.launch_sampler()
+    #     # self.launch_modeler()
+    #     # self.launch_engine()
 
     def run(self):
-        self.register_parser("wiktionary_parser", "WiktionaryParser","G:\wikitionary\workspace\enwiktionary-20141004-pages-articles.xml")
+        _wiktionary_parser_instance = WiktionaryParser("G:\wikitionary\workspace\enwiktionary-20141004-pages-articles.xml")
 
-        self.register_filter("length_filter","LengthFilter")
+        _len_filter = LengthFilter()
+        _len_filter.min_length = 3
 
-        self.start()
+
+        _wiktionary_parser_instance.filters_for_definitions.append(_len_filter)
+        _wiktionary_parser_instance.filters_for_non_definitions.append(_len_filter)
+
+        _wiktionary_parser_instance.start()
+
 
 s=StartupContext()
 s=s.run()
-print "after run..."
+print "StartupContext: waiting after launching parser..."

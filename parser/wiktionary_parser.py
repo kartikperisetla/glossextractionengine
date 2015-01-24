@@ -25,7 +25,7 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
         self.text = None
         self.file_name = file_name
 
-        print "\nWiktionaryParser:init"
+        print "WiktionaryParser:init"
 
     # when parser comes across starting of an element
     def startElement(self, tag, attributes):
@@ -75,7 +75,7 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
                 _buffered_result = ""
                 for definition_instance in _def_set:
                     # apply the length filter on each sentence
-                    if self.apply_filter("length_filter","LengthFilter",definition_instance,3):
+                    if self.apply_filter(self.filters_for_definitions, definition_instance):
                         try:
                             # filtering out titles containing KEYWORD
                             if not WIKTIONARY_TITLE_KEYWORD in self.title.lower():
@@ -92,12 +92,11 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
             _buffered_result = ""
             if len(_non_def_result) > 0:
                 for non_definition_instance in _non_def_result:
-                    if self.apply_filter("length_filter","LengthFilter",non_definition_instance,3):
+                    if self.apply_filter(self.filters_for_non_definitions, non_definition_instance):
                         _buffered_result += "0 '" + article_title.encode("utf-8") + " | " + str(non_definition_instance) + "\n"
 
                 # save the non definitions
                 self.save_non_definitions(_buffered_result)
-
 
     def run(self):
         parser = xml.sax.make_parser()
@@ -105,6 +104,6 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
 
         Handler = self
         parser.setContentHandler(Handler)
-        print "\nwiktionary_parser:run:parsing start"
+        print "wiktionary_parser:run:parsing start"
         parser.parse(self.file_name)
-        print "\nwiktionary_parser:run:parsing complete!"
+        print "wiktionary_parser:run:parsing complete!"
