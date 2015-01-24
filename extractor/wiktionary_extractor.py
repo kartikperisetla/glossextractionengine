@@ -53,7 +53,7 @@ class WiktionaryExtractor:
 
     # method to extract non definitions for article/word with this title
     # params: article title
-    def extract_non_definitions(self, title):
+    def get_non_definitions(self, title):
         if title.strip() == "":
             return
 
@@ -62,15 +62,7 @@ class WiktionaryExtractor:
         _wiki_connector = WikipediaConnector()
         # delegating to wikipedia connector to fetch non definitions for the articles
         result = _wiki_connector.get_non_definitional_sentences_for_article(title)
-        if result is None:
-            return
-
-        # temp buff to hold non definitions
-        buff = ""
-        if len(result) > 0:
-            for line in result:
-                buff += "0 | " + str(line).decode('utf-8') + "\n"
-            return buff.encode('utf-8')
+        return result
 
     # method to cleanup the definition
     def cleanup(self, definition):

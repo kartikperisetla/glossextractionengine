@@ -87,8 +87,14 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
 
     # method to get the non definitions
     def get_non_definitions(self, extractor_instance, article_title):
-        _buffered_result = extractor_instance.extract_non_definitions(article_title)
-        if not _buffered_result is None:
+        _non_def_result = extractor_instance.get_non_definitions(article_title)
+        if not _non_def_result is None:
+            _buffered_result = ""
+            if len(_non_def_result) > 0:
+                for non_definition_instance in _non_def_result:
+                    if self.apply_filter("length_filter","LengthFilter",non_definition_instance,3):
+                        _buffered_result += "0 | " + str(non_definition_instance) + "\n"
+
                 # save the non definitions
                 self.save_non_definitions(_buffered_result)
 
