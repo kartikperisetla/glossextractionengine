@@ -56,30 +56,42 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
 
             # invoking method to get definitions from article body
             _extractor_instance = WiktionaryExtractor()
-            _def_list = _extractor_instance.get_definitions(_article_raw_text)
 
-            if not _def_list is None:
-                _def_set = set(_def_list)
-                if len(_def_set) != 0:
-                    _buffered_result = ""
-                    for definition_instance in _def_set:
+            # get definitions
+            self.get_definitions(_extractor_instance, _article_raw_text)
+
+            # get non definitional sentences
+            self.get_non_definitions(_extractor_instance, self.title)
+
+            # clear the content buffer
+            self.flush()
+
+    # method to get the definitions
+    def get_definitions(self, extractor_instance, raw_text):
+        _def_list = extractor_instance.get_definitions(raw_text)
+        if not _def_list is None:
+            _def_set = set(_def_list)
+            if len(_def_set) != 0:
+                _buffered_result = ""
+                for definition_instance in _def_set:
+                    # apply the length filter on each sentence
+                    if self.apply_filter("length_filter","LengthFilter",definition_instance,3):
                         try:
                             # filtering out titles containing KEYWORD
                             if not WIKTIONARY_TITLE_KEYWORD in self.title.lower():
                                 _buffered_result += self.title.strip() + "| " + definition_instance + "\n"
                         except:
                             pass
-                    # save the definitions
-                    self.save_definitions(_buffered_result)
+                # save the definitions
+                self.save_definitions(_buffered_result)
 
-            # get non definitional sentences
-            _buffered_result = _extractor_instance.extract_non_definitions(self.title)
-            if not _buffered_result is None:
+    # method to get the non definitions
+    def get_non_definitions(self, extractor_instance, article_title):
+        _buffered_result = extractor_instance.extract_non_definitions(article_title)
+        if not _buffered_result is None:
                 # save the non definitions
                 self.save_non_definitions(_buffered_result)
 
-            # clear the content buffer
-            self.flush()
 
     def run(self):
         parser = xml.sax.make_parser()

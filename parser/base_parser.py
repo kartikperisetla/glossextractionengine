@@ -1,6 +1,5 @@
 __author__ = 'kartik'
 
-from abc import ABCMeta, abstractmethod
 import threading
 
 # Base class for Readers
@@ -11,7 +10,6 @@ NON_DEF_TAG = "non-def"
 FILE_EXT = ".txt"
 
 class BaseParser(threading.Thread):
-
     # This should not be overriden by derived class
     # if overriden, make sure to call base class's init
     def __init__(self, *kargs):
@@ -42,6 +40,8 @@ class BaseParser(threading.Thread):
         self.non_def_file_object.close()
 
     # method to save the buffer content to definitions
+    # params:
+    # buffer: raw string buffer to be saved on disk
     def save_definitions(self, buffer):
         if not buffer is None :
             self.def_file_object = open(self.def_file_name, "a")
@@ -50,11 +50,30 @@ class BaseParser(threading.Thread):
 
 
     # method to save the buffer content to non definitions
+    # params:
+    # buffer: raw string buffer to be saved on disk
     def save_non_definitions(self, buffer):
         if not buffer is None :
             self.non_def_file_object = open(self.non_def_file_name, "a")
             self.non_def_file_object.write(buffer)
             self.non_def_file_object.close()
+
+    # method to apply filter
+    # params:
+    # module_name: name of the module where filter class is present
+    # filter_class: name of the filter class
+    # sentence: sentence on which to apply given filter
+    # returns the boolean response whether given sentence satisfies given filter rules
+    def apply_filter(self, module_name, filter_class, sentence, min_length):
+        if not self.filter_collection is None:
+            key = module_name+":"+filter_class
+            # look if requested filter is present in filter collection provided by StartupContext
+            if self.filter_collection.has_key(key):
+                 # lookup filter instance
+                _filter_instance = self.filter_collection[key]
+                # return the filter response for given sentence
+                return _filter_instance.filter(sentence)
+
 
 
 
