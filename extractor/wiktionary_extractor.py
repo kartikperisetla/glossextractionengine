@@ -11,15 +11,6 @@ class WiktionaryExtractor:
         self.synonym_pattern = "===Synonyms==="
         pass
 
-    # method to extract definitions based on word POS tag
-    # params: raw text of wiktionary article
-    def get_definitions(self, raw):
-        if raw.find(self.noun_pattern, 0, len(raw)) != -1:
-            return self.noun_processing(raw)
-
-        if raw.find(self.adjective_pattern, 0, len(raw)) != -1:
-            return self.adjective_processing(raw)
-
     # method to check if its noun and extract definitions
     # params: raw text of wiktionary article
     def noun_processing(self, raw):
@@ -50,6 +41,15 @@ class WiktionaryExtractor:
                 if clean_def != "":
                     result_list.append(clean_def)
         return result_list
+
+    # method to extract definitions based on word POS tag
+    # params: raw text of wiktionary article
+    def get_definitions(self, raw):
+        if raw.find(self.noun_pattern, 0, len(raw)) != -1:
+            return self.noun_processing(raw)
+
+        if raw.find(self.adjective_pattern, 0, len(raw)) != -1:
+            return self.adjective_processing(raw)
 
     # method to extract non definitions for article/word with this title
     # params: article title
