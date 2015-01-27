@@ -1,5 +1,6 @@
 __author__ = 'kartik'
 from utils.wikipedia_util import WikipediaConnector
+from wikimarkup_handler import WikiMarkupParser
 import re
 
 # class to perform extraction operations on wiktionary raw article text
@@ -31,13 +32,17 @@ class WiktionaryExtractor:
 
         items_list = def_raw.split("\n")
         result_list = []
+
+        # get instance of wikimarkup parser to clean
+        _wiki_parser = WikiMarkupParser()
+
         for item in items_list:
             if item[0:2] == "# ":
-                clean_def = self.cleanup(item[2:]).strip()
+                clean_def = _wiki_parser.cleanup(item[2:]).strip()
                 if clean_def != "":
                     result_list.append(clean_def)
             if item[0:3] == "## ":
-                clean_def = self.cleanup(item[3:]).strip()
+                clean_def = _wiki_parser.cleanup(item[3:]).strip()
                 if clean_def != "":
                     result_list.append(clean_def)
         return result_list
@@ -62,16 +67,4 @@ class WiktionaryExtractor:
         _wiki_connector = WikipediaConnector()
         # delegating to wikipedia connector to fetch non definitions for the articles
         result = _wiki_connector.get_non_definitional_sentences_for_article(title)
-        return result
-
-    # method to cleanup the definition
-    def cleanup(self, definition):
-        result = re.sub('{{.*?}}', '', definition)
-        result = re.sub('{{.*?}', '', result)
-        result = re.sub("''", '', result)
-        result = re.sub('\[\[', '', result)
-        result = re.sub(']]', '', result)
-        result = re.sub('<ref.*?>', '', result)
-        result = re.sub('</ref>', '', result)
-        result = re.sub('#.+|', '', result)
         return result
