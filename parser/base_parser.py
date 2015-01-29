@@ -71,8 +71,7 @@ class BaseParser(threading.Thread):
 
     # method to apply filter
     # params:
-    # module_name: name of the module where filter class is present
-    # filter_class: name of the filter class
+    # filter_collection: list of filter object that will be applied on given sentence
     # sentence: sentence on which to apply given filter
     # returns the boolean response whether given sentence satisfies given filter rules
     def apply_filter(self, filter_collection, sentence):
@@ -84,6 +83,20 @@ class BaseParser(threading.Thread):
 
             # passed all filters
             return True
+
+
+    # method to apply transformation
+    # params:
+    # transformation_collection: list of transformation objects that will be applied on given text
+    # text: text on which transformation is to be applied
+    def apply_transformation(self, transformation_collection, text):
+        if not transformation_collection is None:
+            for _transformation_instance in transformation_collection:
+                text = _transformation_instance.transform(text)
+
+            return text
+        else:
+            return None
 
 
 
