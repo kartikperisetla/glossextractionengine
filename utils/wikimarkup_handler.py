@@ -33,17 +33,18 @@ class WikiMarkupParser(object):
         self.string = self.wiki_re.sub('', self.string)
         # search for lists
         self.listmatch = re.search('^(\*+)', self.string)
+
         if self.listmatch:
             self.string = self.__list(self.listmatch) + re.sub('^(\*+)', \
                           '', self.string)
         self.string = self.cleanup(self.string)
+
         return self.string
 
     # method to cleanup the definition
     def cleanup(self, raw):
         result = re.sub('{{.*?}}', '', raw)
         result = re.sub('{{.*?}', '', result)
-        result = re.sub('{{.*?', '', result)
         result = re.sub('\[.*?\]', '', result)
         result = re.sub("''", '', result)
         result = re.sub('\[\[', '', result)
@@ -58,8 +59,11 @@ class WikiMarkupParser(object):
         '''
         Parse a string object to de-wikified text
         '''
-        self.strings = string.splitlines(1)
+        # splitting lines on '.' since raw don't have newlines in article raw text
+        self.strings = string.split(".")
+
         self.strings = [self.__parse(line) for line in self.strings]
+
         return ''.join(self.strings)
 
     def parse_byte(self, byte=None):
