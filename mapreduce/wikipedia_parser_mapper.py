@@ -1,6 +1,4 @@
 #!/usr/bin/python
-__author__ = 'kartik'
-
 import sys,re
 import cStringIO
 import xml.etree.ElementTree as xml
@@ -36,6 +34,7 @@ class WikipediaParserMapper:
 
     # method to emit all definitions with common definition key so that all definitions are accumulated at a single reducer
     def emit_definitions(self, article_title, definition_list):
+        print "got definitions:",definition_list
         if not definition_list is None:
             for definition_item in definition_list:
                 print self._definition_key,"\t",article_title,"\t",definition_item
@@ -58,7 +57,7 @@ if __name__ == '__main__':
     for line in sys.stdin:
         line = line.strip()
 
-        _collection = line.strip("\t")
+        _collection = line.split("\t")
         _instance.article_title = _collection[0]
         _instance.article_raw_text = _collection[1]
         _instance.process()

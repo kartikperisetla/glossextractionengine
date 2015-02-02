@@ -1,7 +1,4 @@
 #!/usr/bin/python
-__author__ = 'kartik'
-
-
 import sys,re
 import cStringIO
 import xml.etree.ElementTree as xml
@@ -20,7 +17,7 @@ class WikipediaParserReducer:
         self._definition_key = None
         self._nondefinition_key = None
         self._definition_score = None
-        self._nondefinition_score =
+        self._nondefinition_score = None
 
     # method to print the definitions in a specific format
     def save_definition(self):
