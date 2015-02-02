@@ -1,6 +1,6 @@
+#!/usr/bin/python
 __author__ = 'kartik'
 
-#!/usr/bin/env python
 import sys,re
 import cStringIO
 import xml.etree.ElementTree as xml
