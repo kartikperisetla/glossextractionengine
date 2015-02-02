@@ -4,6 +4,10 @@ __author__ = 'kartik'
 import sys,re
 import cStringIO
 import xml.etree.ElementTree as xml
+
+# add library to path
+sys.path.insert(0, 'glossextractionengine.mod')
+
 from extractor.wikipedia_extractor import WikipediaExtractor
 
 # reducer side - parser class for parsing wikipedia articles dump
