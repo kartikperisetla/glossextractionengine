@@ -5,11 +5,16 @@ import sys,re
 import cStringIO
 import xml.etree.ElementTree as xml
 
+from extractor.wikipedia_extractor import WikipediaExtractor
+
+# mapper side - parser class for parsing wikipedia articles dump
 class WikipediaParserMapper:
     def __init__(self):
         self.buff = cStringIO.StringIO()
-        self.intext = False
-        self.intitle = False
+        self.article_title = False
+        self.article_raw_text = False
+        self._definition_key = None
+        self._nondefinition_key = None
 
     # method to remove tags and replace newlines with spaces
     def normalize(self, raw):
@@ -18,51 +23,39 @@ class WikipediaParserMapper:
         result = re.sub(r'\t',' ',result)
         return result
 
+    # method that processes each line input to mapper
     def process(self):
-        self.current_article_title = self.normalize(self.current_article_title)
-        self.current_article_text = self.normalize(self.current_article_text)
-        returnval = self.current_article_title + "\t" + self.current_article_text
-        return returnval.strip()
+        _wikipedia_extractor = WikipediaExtractor()
+        _def_list = _wikipedia_extractor.get_definitions(self.article_raw_text)
+        _non_def_list = _wikipedia_extractor.get_non_definitions(self.article_raw_text)
+        self.emit_definitions(self.article_title, _def_list)
+        self.emit_non_definitions(self.article_title, _non_def_list)
+
+    # method to emit all definitions with common definition key so that all definitions are accumulated at a single reducer
+    def emit_definitions(self, article_title, definition_list):
+        if not definition_list is None:
+            for definition_item in definition_list:
+                print self._definition_key,"\t",article_title,"\t",definition_item
+
+    # method to emit all non definitions with common non definition key so that all non definitions are accumulated at a single reducer
+    def emit_non_definitions(self, article_title, non_definition_list):
+        if not non_definition_list is None:
+            for non_definition_item in non_definition_list:
+                print self._nondefinition_key,"\t",article_title,"\t",non_definition_item
+
 
 
 if __name__ == '__main__':
     _instance = WikipediaParserMapper()
+    # setting the keys for defnitions and non definitions
+    _instance._definition_key = "DEF"
+    _instance._nondefinition_key = "NONDEF"
 
+    # a single line is <article_title>\t<raw_article_text>
     for line in sys.stdin:
         line = line.strip()
 
-        if line.find("<title>") !=-1:
-            _instance.intitle = True
-            _instance.buff = cStringIO.StringIO()
-            _instance.buff.write(line)
-            _instance.current_article_title = None
-        elif line.find("</title>") != -1:
-            _instance.intitle = False
-            _instance.buff.write(line)
-            val = _instance.buff.getvalue()
-            _instance.buff.close()
-            _instance.buff = None
-
-            # capturing the currently processed article title
-            _instance.current_article_title = val
-        elif _instance.intitle:
-                _instance.buff.write(line)
-
-        elif line.find("<text>") != -1:
-            _instance.intext = True
-            _instance.buff = cStringIO.StringIO()
-            _instance.buff.write(line)
-        elif line.find("</text>") != -1:
-            _instance.intext = False
-            _instance.buff.write(line)
-            val = _instance.buff.getvalue()
-            _instance.buff.close()
-            _instance.buff = None
-
-            # print _instance.process(val)
-            _instance.current_article_text = val
-            # parsed title and text, now give it to reducer
-            _instance.process()
-        else:
-            if _instance.intext:
-                _instance.buff.write(line)
+        _collection = line.strip("\t")
+        _instance.article_title = _collection[0]
+        _instance.article_raw_text = _collection[1]
+        _instance.process()
