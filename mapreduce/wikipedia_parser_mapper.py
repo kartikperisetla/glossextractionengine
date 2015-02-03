@@ -62,11 +62,15 @@ if __name__ == '__main__':
     for line in sys.stdin:
         line = line.strip()
 
-        _collection = line.split("\t")
-        # print >>sys.stderr,"\ngot collection:",_collection
-        _instance.article_title = _collection[0]
-        _instance.article_raw_text = _collection[1]
-        _instance.process()
+        # if valid <article_title>\t<article_text> pair
+        if "\t" in line:
+            _collection = line.split("\t")
+            # if article is not of 'File:' or 'Category:' type
+            if not ":" in _collection[0]:
+                # print >>sys.stderr,"\ngot collection:",_collection
+                _instance.article_title = _collection[0]
+                _instance.article_raw_text = _collection[1]
+                _instance.process()
 
 
 # # for local testing purpose

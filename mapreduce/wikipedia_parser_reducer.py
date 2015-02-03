@@ -38,15 +38,16 @@ if __name__ == '__main__':
 
     # a single line is <TYPE_KEY>\t<article_title>\t<def_or_non_def_based on TYPE_LEY>
     for line in sys.stdin:
-        _collection = line.split("\t")
-        print >>sys.stderr,"got collection:",_collection
-        _type_key = _collection[0].strip()
-        _instance.article_title = _collection[1].strip()
-        _instance.sentence = _collection[2].strip()
+        # if valid <TYPE_KEY>\t<article_title>\t<def_or_non_def_based on TYPE_LEY> format
+        if "\t" in line:
+            _collection = line.split("\t")
+            _type_key = _collection[0].strip()
+            _instance.article_title = _collection[1].strip()
+            _instance.sentence = _collection[2].strip()
 
-        # print >>sys.stderr,"KEY:",_type_key," SENTENCE:",_instance.sentence
-        if not _type_key is None:
-            if _type_key == _instance._definition_key:
-                _instance.save_definition()
-            if _type_key == _instance._nondefinition_key:
-                _instance.save_non_definitions()
+            # print >>sys.stderr,"KEY:",_type_key," SENTENCE:",_instance.sentence
+            if not _type_key is None:
+                if _type_key == _instance._definition_key:
+                    _instance.save_definition()
+                if _type_key == _instance._nondefinition_key:
+                    _instance.save_non_definitions()
