@@ -63,13 +63,14 @@ if __name__ == '__main__':
         line = line.strip()
 
         _collection = line.split("\t")
+        # print >>sys.stderr,"\ngot collection:",_collection
         _instance.article_title = _collection[0]
         _instance.article_raw_text = _collection[1]
         _instance.process()
 
 
 # # for local testing purpose
-# f = open("30_rec","r")
+# f = open("100_rec","r")
 #
 # _instance = WikipediaParserMapper()
 # _instance._definition_key = "DEF"

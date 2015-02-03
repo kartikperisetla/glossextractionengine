@@ -21,11 +21,11 @@ class WikipediaParserReducer:
 
     # method to print the definitions in a specific format
     def save_definition(self):
-        print self._definition_score," '",self.article_title," | ",self.sentence
+        print "%s '%s | %s" % (self._definition_score,self.article_title.strip(),self.sentence)
 
     # method to print the non definitions in a specific format
     def save_non_definitions(self):
-        print self._nondefinition_score," '",self.article_title," | ",self.sentence
+        print "%s '%s | %s" % (self._nondefinition_score,self.article_title.strip(),self.sentence)
 
 if __name__ == '__main__':
     _instance = WikipediaParserReducer()
@@ -39,10 +39,12 @@ if __name__ == '__main__':
     # a single line is <TYPE_KEY>\t<article_title>\t<def_or_non_def_based on TYPE_LEY>
     for line in sys.stdin:
         _collection = line.split("\t")
-        _type_key = _collection[0]
-        _instance.article_title = _collection[1]
-        _instance.sentence = _collection[2]
+        print >>sys.stderr,"got collection:",_collection
+        _type_key = _collection[0].strip()
+        _instance.article_title = _collection[1].strip()
+        _instance.sentence = _collection[2].strip()
 
+        # print >>sys.stderr,"KEY:",_type_key," SENTENCE:",_instance.sentence
         if not _type_key is None:
             if _type_key == _instance._definition_key:
                 _instance.save_definition()
