@@ -11,8 +11,8 @@ from parser import *
 sys.path.append("../parser")
 sys.path.append("../filter")
 
-from wiktionary_parser import WiktionaryParser
-from wikipedia_parser import WikipediaParser
+from parser.wiktionary_parser import WiktionaryParser
+from parser.wikipedia_parser import WikipediaParser
 from filter.length_filter import *
 
 # usage : run.py operation_mode file
