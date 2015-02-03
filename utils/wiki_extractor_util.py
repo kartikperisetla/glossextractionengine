@@ -427,7 +427,9 @@ def clean(text):
 
     # Drop preformatted
     # This can't be done before since it may remove tags
-    text = preformatted.sub('', text)
+
+    # kartik - commenting below line intentionally
+    # text = preformatted.sub('', text)
 
     # Cleanup text
     text = text.replace('\t', ' ')

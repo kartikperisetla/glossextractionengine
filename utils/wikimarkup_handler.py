@@ -1,6 +1,7 @@
 __author__ = 'kartik'
 
 import re
+from utils.regex_handler import RegexHandler
 
 class WikiMarkupParser(object):
     '''
@@ -22,6 +23,8 @@ class WikiMarkupParser(object):
                                         {{[\s\S]+}}|
                                         ^={1,6}|={1,6}$""", re.X)
 
+        self.regex_handler = RegexHandler()
+
     def __list(self, listmatch):
         return ' ' * (len(listmatch.group()) - 1) + '*'
 
@@ -37,43 +40,22 @@ class WikiMarkupParser(object):
         if self.listmatch:
             self.string = self.__list(self.listmatch) + re.sub('^(\*+)', \
                           '', self.string)
-        self.string = self.cleanup(self.string)
+        self.string = self.regex_handler.clean_wikipedia_article(self.string)
 
         return self.string
 
-    # method to cleanup the definition
-    def cleanup(self, raw):
-        result = re.sub('{{.*?}}', '', raw)
-        result = re.sub('{{.*?}', '', result)
-        result = re.sub('\[.*?\]', '', result)
-        result = re.sub("''", '', result)
-        result = re.sub('\[\[', '', result)
-        result = re.sub(']]', '', result)
-        result = re.sub('<ref.*?>', '', result)
-        result = re.sub('</ref>', '', result)
-        result = re.sub('#.+|', '', result)
+    # def parse_string(self, string=''):
+    #     self.strings = string.split(".")
+    #     self.strings = [self.__parse(line) for line in self.strings]
+    #     return '.'.join(self.strings)
+
+    # method to clean wikipedia markup using wiki_extractor clean method
+    def parse_string(self, string =''):
+        result = self.regex_handler.clean_wikipedia_article(string)
         return result
 
-
-    def parse_string(self, string=''):
-        '''
-        Parse a string object to de-wikified text
-        '''
-        # splitting lines on '.' since raw don't have newlines in article raw text
-        self.strings = string.split(".")
-
-        self.strings = [self.__parse(line) for line in self.strings]
-
-        return ''.join(self.strings)
-
     def parse_byte(self, byte=None):
-        '''
-        Parse a byte object to de-wikified text
-        '''
         pass
 
     def parse_file(self, file=None):
-        '''
-        Parse the content of a file to de-wikified text
-        '''
         pass
