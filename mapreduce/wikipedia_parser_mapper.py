@@ -34,16 +34,21 @@ class WikipediaParserMapper:
 
     # method to emit all definitions with common definition key so that all definitions are accumulated at a single reducer
     def emit_definitions(self, article_title, definition_list):
-        print "got definitions:",definition_list
         if not definition_list is None:
             for definition_item in definition_list:
-                print self._definition_key,"\t",article_title,"\t",definition_item
+
+                # article title is present in definition
+                if article_title in definition_item:
+                    print self._definition_key,"\t",article_title,"\t",definition_item.encode('utf-8')
 
     # method to emit all non definitions with common non definition key so that all non definitions are accumulated at a single reducer
     def emit_non_definitions(self, article_title, non_definition_list):
         if not non_definition_list is None:
             for non_definition_item in non_definition_list:
-                print self._nondefinition_key,"\t",article_title,"\t",non_definition_item
+
+                # article title is present in non definition
+                if article_title in non_definition_item:
+                    print self._nondefinition_key,"\t",article_title,"\t",non_definition_item.encode('utf-8')
 
 
 
@@ -61,3 +66,18 @@ if __name__ == '__main__':
         _instance.article_title = _collection[0]
         _instance.article_raw_text = _collection[1]
         _instance.process()
+
+
+# # for local testing purpose
+# f = open("30_rec","r")
+#
+# _instance = WikipediaParserMapper()
+# _instance._definition_key = "DEF"
+# _instance._nondefinition_key = "NONDEF"
+#
+# for line in f:
+#     _collection = line.split("\t")
+#     _instance.article_title = _collection[0]
+#     _instance.article_raw_text = _collection[1]
+#     _instance.process()
+
