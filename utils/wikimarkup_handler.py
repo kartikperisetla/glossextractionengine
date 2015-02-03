@@ -51,7 +51,9 @@ class WikiMarkupParser(object):
 
     # method to clean wikipedia markup using wiki_extractor clean method
     def parse_string(self, string =''):
-        result = self.regex_handler.clean_wikipedia_article(string)
+        result = self.regex_handler.clean_wikipedia_article(string) # wiki_extractor
+        result = re.sub(r'\(.*?\)','',result) # plain regex
+        # result = re.sub(r'\)','',result)
         return result
 
     def parse_byte(self, byte=None):
