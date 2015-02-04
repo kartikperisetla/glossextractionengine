@@ -38,7 +38,7 @@ class WikipediaParserMapper:
             for definition_item in definition_list:
 
                 # article title is present in definition
-                if article_title in definition_item and not '*' in definition_item and not '#REDIRECT' in definition_item:
+                if article_title in definition_item and not '*' in definition_item and not '#REDIRECT'.lower() in definition_item.lower():
                     print self._definition_key,"\t",article_title,"\t",definition_item.encode('utf-8')
 
     # method to emit all non definitions with common non definition key so that all non definitions are accumulated at a single reducer
@@ -47,7 +47,7 @@ class WikipediaParserMapper:
             for non_definition_item in non_definition_list:
 
                 # article title is present in non definition
-                if article_title in non_definition_item and not '*' in non_definition_item and not '#REDIRECT' in non_definition_item:
+                if article_title in non_definition_item and not '*' in non_definition_item and not '#REDIRECT'.lower() in non_definition_item.lower():
                     print self._nondefinition_key,"\t",article_title,"\t",non_definition_item.encode('utf-8')
 
 
