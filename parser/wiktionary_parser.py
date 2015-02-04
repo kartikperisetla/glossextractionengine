@@ -1,13 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*-coding: utf-8-*-
 
 __author__ = 'kartik'
 import sys, xml.sax, re
+
+import string
 import codecs
 import wikipedia
 from base_parser import BaseParser
-from utils.wikipedia_util import WikipediaConnector
-from extractor.wiktionary_extractor import WiktionaryExtractor
+from wikipedia_util import WikipediaConnector
+from wiktionary_extractor import WiktionaryExtractor
+
+
 
 WIKTIONARY_TITLE_KEYWORD = "wiktionary"
 
@@ -24,6 +28,8 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
         self.title = None
         self.text = None
         self.file_name = file_name
+        self._definition_score = None
+        self._nondefinition_score = None
 
         print "WiktionaryParser:init"
 
@@ -76,12 +82,13 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
                 for definition_instance in _def_set:
                     # apply the length filter on each sentence
                     if self.apply_filter(self.filters_for_definitions, definition_instance):
-                        try:
-                            # filtering out titles containing KEYWORD
-                            if not WIKTIONARY_TITLE_KEYWORD in self.title.lower():
-                                _buffered_result += "1 '" + self.title.strip() + " | " + definition_instance + "\n"
-                        except:
-                            pass
+                        # try:
+                        # filtering out titles containing KEYWORD
+                        if not WIKTIONARY_TITLE_KEYWORD in self.title.lower():
+                            _transformed_definition = self.apply_transformation(transformation_collection=self.transformations_for_definitions, article_title=self.title.strip(), article_text = definition_instance)
+                            _buffered_result += self._definition_score + " '" + self.title.strip() + " | " + filter(lambda x: x in string.printable,_transformed_definition) + "\n"
+                        # except:
+                        #     pass
                 # save the definitions
                 self.save_definitions(_buffered_result)
 
@@ -93,7 +100,9 @@ class WiktionaryParser(BaseParser,xml.sax.ContentHandler):
             if len(_non_def_result) > 0:
                 for non_definition_instance in _non_def_result:
                     if self.apply_filter(self.filters_for_non_definitions, non_definition_instance):
-                        _buffered_result += "0 '" + article_title.encode("utf-8") + " | " + str(non_definition_instance) + "\n"
+                        _buffered_result += self._nondefinition_score \
+                                            + " '" + article_title + " | " \
+                                            + filter(lambda x: x in string.printable, non_definition_instance) + "\n"
 
                 # save the non definitions
                 self.save_non_definitions(_buffered_result)

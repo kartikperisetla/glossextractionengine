@@ -1,6 +1,9 @@
+#!/usr/bin/python
+# -*-coding: utf-8-*-
+
 __author__ = 'kartik'
 
-import threading
+import threading,string
 
 # Base class for Readers
 # Allows concrete implementations to read from various sources of data and generate train and test instances
@@ -56,7 +59,7 @@ class BaseParser(threading.Thread):
     def save_definitions(self, buffer):
         if not buffer is None :
             self.def_file_object = open(self.def_file_name, "a")
-            self.def_file_object.write(buffer)
+            self.def_file_object.write(filter(lambda x: x in string.printable, buffer))
             self.def_file_object.close()
 
 
@@ -66,7 +69,7 @@ class BaseParser(threading.Thread):
     def save_non_definitions(self, buffer):
         if not buffer is None :
             self.non_def_file_object = open(self.non_def_file_name, "a")
-            self.non_def_file_object.write(buffer)
+            self.non_def_file_object.write(filter(lambda x: x in string.printable, buffer))
             self.non_def_file_object.close()
 
     # method to apply filter
@@ -89,10 +92,10 @@ class BaseParser(threading.Thread):
     # params:
     # transformation_collection: list of transformation objects that will be applied on given text
     # text: text on which transformation is to be applied
-    def apply_transformation(self, transformation_collection, text):
+    def apply_transformation(self, transformation_collection, article_title, article_text):
         if not transformation_collection is None:
             for _transformation_instance in transformation_collection:
-                text = _transformation_instance.transform(text)
+                text = _transformation_instance.transform(article_title, article_text)
 
             return text
         else:
