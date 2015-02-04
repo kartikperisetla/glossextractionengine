@@ -8,6 +8,6 @@ class BaseTransformation:
         print "BaseTransformation:init"
 
     # method that applies transformation on text
-    def transform(self, text):
+    def transform(self, *kargs):
         pass
         # This method must be overriden by derived class
