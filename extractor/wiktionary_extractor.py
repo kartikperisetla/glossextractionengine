@@ -1,6 +1,8 @@
 __author__ = 'kartik'
-from utils.wikipedia_util import WikipediaConnector
+from wikipedia_util import WikipediaConnector
 from wikimarkup_handler import WikiMarkupParser
+from regex_handler import RegexHandler
+
 import re
 
 # class to perform extraction operations on wiktionary raw article text
@@ -34,15 +36,15 @@ class WiktionaryExtractor:
         result_list = []
 
         # get instance of wikimarkup parser to clean
-        _wiki_parser = WikiMarkupParser()
+        _wiki_parser = RegexHandler()
 
         for item in items_list:
             if item[0:2] == "# ":
-                clean_def = _wiki_parser.cleanup(item[2:]).strip()
+                clean_def = _wiki_parser.wiktionary_markup_cleanup(item[2:]).strip()
                 if clean_def != "":
                     result_list.append(clean_def)
             if item[0:3] == "## ":
-                clean_def = _wiki_parser.cleanup(item[3:]).strip()
+                clean_def = _wiki_parser.wiktionary_markup_cleanup(item[3:]).strip()
                 if clean_def != "":
                     result_list.append(clean_def)
         return result_list
