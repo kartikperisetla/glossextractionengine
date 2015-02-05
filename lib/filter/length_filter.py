@@ -1,6 +1,6 @@
 __author__ = 'kartik'
 
-from base_filter import BaseFilter
+from lib.filter.base_filter import BaseFilter
 
 # class that filters sentences based on sentence length
 class LengthFilter(BaseFilter):

@@ -1,6 +1,5 @@
 __author__ = 'kartik'
 
-from base_parser import BaseParser
 
 class WikipediaParser():
     def custom_init(self, article_title_id_filename):

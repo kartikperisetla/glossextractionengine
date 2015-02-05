@@ -1,7 +1,9 @@
 __author__ = 'kartik'
 
 import string
-from base_transformation import BaseTransformation
+
+from lib.transformation.base_transformation import BaseTransformation
+
 
 class WiktionaryDefinitionTransformation(BaseTransformation):
 

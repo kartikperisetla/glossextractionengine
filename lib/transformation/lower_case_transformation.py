@@ -1,6 +1,6 @@
 __author__ = 'kartik'
 
-from transformation.base_transformation import BaseTransformation
+from lib.transformation.base_transformation import BaseTransformation
 
 class LowerCaseTransformation(BaseTransformation):
 

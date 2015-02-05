@@ -1,7 +1,9 @@
 __author__ = 'kartik'
 
 import re
-from regex_handler import RegexHandler
+
+from lib.utils.regex_handler import RegexHandler
+
 
 class WikiMarkupParser(object):
     '''

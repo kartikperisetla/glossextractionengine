@@ -1,7 +1,6 @@
 __author__ = 'kartik'
 
-import re
-from utils.wikimarkup_handler import WikiMarkupParser
+from lib.utils.wikimarkup_handler import WikiMarkupParser
 
 # class to perform extraction operations on wikipedia raw article text
 class WikipediaExtractor:

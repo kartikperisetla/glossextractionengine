@@ -2,8 +2,9 @@
 
 __author__ = 'kartik'
 
-import os,sys
-from sampler.random_sampler import RandomSampler
+import sys
+
+from lib.sampler.random_sampler import RandomSampler
 
 # class to do sampling
 class SamplingStub:
@@ -22,5 +23,9 @@ class SamplingStub:
         _instance.generateDatasets(train_set_size, test_set_size)
 
         print "SamplingStub: sampling done."
+
+
+s= SamplingStub()
+s.sample()
 
 

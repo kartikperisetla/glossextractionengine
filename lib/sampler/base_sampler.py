@@ -10,6 +10,9 @@ class BaseSampler:
         self.max_negative = self.count_records(negative_dataset_file)
         self.positiveSource = positive_dataset_file
         self.negativeSource = negative_dataset_file
+        os.system("rm -rf  Train")
+        os.system("rm -rf  Test")
+
         pass
 
     def count_records(self,file):
@@ -63,11 +66,11 @@ class BaseSampler:
         print "preparing train set"
         self.generateTrainingSet(train_positive_index_list, train_negative_index_list)
 
-        os.system("rmdir /S /Q Train")
+
         os.system("mkdir Train")
         os.system("mv pos_samples Train")
         os.system("mv neg_samples Train")
-        os.system("cat Train/pos_samples Train/neg_samples >Train/Train_set")
+        os.system("cat Train/pos_samples Train/neg_samples >Train/train_set")
         self.prepareTaglessTrainSet()
 
     # method to prepare labeled test dataset
@@ -92,7 +95,7 @@ class BaseSampler:
         print "preparing test set"
         self.generateTestSet(test_positive_index_list, test_negative_index_list)
 
-        os.system("rmdir /S /Q Test")
+
         os.system("mkdir Test")
         os.system("mv pos_samples Test")
         os.system("mv neg_samples Test")

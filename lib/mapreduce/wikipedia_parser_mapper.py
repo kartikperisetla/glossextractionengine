@@ -1,12 +1,13 @@
 #!/usr/bin/python
-import sys,re
+import sys
+import re
 import cStringIO
-import xml.etree.ElementTree as xml
+
 
 # add library to path
 sys.path.insert(0, 'glossextractionengine.mod')
 
-from extractor.wikipedia_extractor import WikipediaExtractor
+from lib.content_extractor.wikipedia_extractor import WikipediaExtractor
 
 # mapper side - parser class for parsing wikipedia articles dump
 class WikipediaParserMapper:

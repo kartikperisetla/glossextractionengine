@@ -1,9 +1,6 @@
 __author__ = 'kartik'
 from wikipedia_util import WikipediaConnector
-from wikimarkup_handler import WikiMarkupParser
-from regex_handler import RegexHandler
-
-import re
+from lib.utils.regex_handler import RegexHandler
 
 # class to perform extraction operations on wiktionary raw article text
 class WiktionaryExtractor:

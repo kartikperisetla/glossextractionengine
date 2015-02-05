@@ -1,9 +1,12 @@
 #!/usr/bin/python
 __author__ = 'kartik'
 
-from base_sampler import BaseSampler
-import os,sys,random,linecache
-from utils.regex_handler import RegexHandler
+import random
+import linecache
+
+from lib.sampler.base_sampler import BaseSampler
+from lib.utils.regex_handler import RegexHandler
+
 
 class RandomSampler(BaseSampler):
 

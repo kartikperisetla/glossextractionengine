@@ -3,7 +3,9 @@
 __author__ = 'kartik'
 
 import re
-from wiki_extractor_util import clean
+
+from lib.utils.wiki_extractor_util import clean
+
 
 class RegexHandler:
 

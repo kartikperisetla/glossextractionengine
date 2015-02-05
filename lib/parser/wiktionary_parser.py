@@ -2,13 +2,10 @@
 # -*-coding: utf-8-*-
 
 __author__ = 'kartik'
-import sys, xml.sax, re
-
+import xml.sax
 import string
-import codecs
-import wikipedia
-from base_parser import BaseParser
-from wikipedia_util import WikipediaConnector
+
+from lib.parser.base_parser import BaseParser
 from wiktionary_extractor import WiktionaryExtractor
 
 

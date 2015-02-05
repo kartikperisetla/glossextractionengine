@@ -2,25 +2,19 @@
 
 __author__ = 'kartik'
 
-import os, sys
+import sys
 # add library to path
 # sys.path.insert(0, 'glossextractionengine.mod')
-
-import xml
-import parser
 
 # adding parser package to path
 sys.path.append("../parser")
 sys.path.append("../filter")
 sys.path.append("../utils")
-sys.path.append("../extractor")
+sys.path.append("../content_extractor")
 sys.path.append("../transformation")
 
-from wiktionary_extractor import WiktionaryExtractor
 from wiktionary_parser import WiktionaryParser
-from wikipedia_parser import WikipediaParser
 from length_filter import *
-from dynamic_class_loader import DynamicClassLoader
 from wiktionary_definition_transformation import  WiktionaryDefinitionTransformation
 
 # usage : startup_context.py operation_mode file
