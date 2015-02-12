@@ -1,9 +1,11 @@
 #!/usr/bin/python
-
-__author__ = 'kartik'
+import sys
+# add library to path
+sys.path.insert(0, 'glossextractionengine.mod')
 
 from lib.feature_extractor.base_feature_extractor import BaseFeatureExtractor
 from lib.feature_extractor.sentence_tokens_feature_extractor import SentenceTokensFeatureExtractor
+
 import re,nltk
 
 KPARAM = "ALL"
@@ -13,7 +15,6 @@ PRIME_FEATURE_LENGTH = 4
 class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     def __init__(self, k_param=KPARAM,prime_feature_length=PRIME_FEATURE_LENGTH):
-        super(POSContextSequenceFeatureExtractor, self).__init__()
         self.k_param = k_param
         self.prime_feature_length = prime_feature_length
         self.add_prime_feature = False

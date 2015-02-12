@@ -1,11 +1,8 @@
 #!/usr/bin/python
 
-__author__ = 'kartik'
-
-
 class BaseFeatureExtractor:
     def __init__(self):
-        print "BaseFeatureExtractor:init"
+        pass
 
     # method that takes instance as input and returns feature vector and optional category label
     def extract_features(self, instance):

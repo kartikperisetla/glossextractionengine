@@ -1,10 +1,12 @@
 #!/usr/bin/python
+import sys
+# add library to path
+sys.path.insert(0, 'glossextractionengine.mod')
 
 __author__ = 'kartik'
 
 from lib.feature_extractor.base_feature_extractor import BaseFeatureExtractor
-import re
-import nltk
+import re,nltk
 
 # method that extracts basic sentence features like tokens, instance_name in instance provided
 class SentenceTokensFeatureExtractor(BaseFeatureExtractor):
