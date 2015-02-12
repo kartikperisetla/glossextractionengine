@@ -2,19 +2,18 @@
 import sys
 import re
 import cStringIO
-
-
 # add library to path
 sys.path.insert(0, 'glossextractionengine.mod')
 
 class FeatureExtractionFlowReducer:
     def process(self, line):
-        _collection = line.split("\t")
-        category = _collection[0]
-        feature_dict = _collection[1]
+        if line.strip()!="":
+            _collection = line.split("\t")
+            category = _collection[0]
+            feature_dict = _collection[1]
 
-        feature_category_tuple = (feature_dict,category)
-        print feature_category_tuple,"\n"
+            feature_category_tuple = (feature_dict,category)
+            print feature_category_tuple,"\n"
 
 
 if __name__ == '__main__':
