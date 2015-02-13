@@ -131,7 +131,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
     def extract_features(self, instance):
         _sentence_feature_extractor = SentenceTokensFeatureExtractor()
         result_tuple = _sentence_feature_extractor.extract_features(instance)
-        category,word,tokens,sentence = result_tuple
+        category,word,tokens,sentence,_old_word = result_tuple
 
         # if using test instance
         if category is None and word is None:
@@ -149,21 +149,29 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         # if sentence contains the NP
         if word in sentence.lower():
             self.debug("word in sentence")
+            print(sys.stderr,"word:",word," sentence:",sentence)
+
             # print(sys.stderr,"word in sentence:going for getFullSentenceSequenceModel")
+
             # tokens in sentence is less or equal to k param
             if len(tokens)<=self.k_param:
                 feature_dict = self.getFullSentenceSequenceModel(result_tuple)
             else:
-
+                # if the word is not present as complete word in token list 'tokens'
                 if tokens.count(word)==0:
+                    # iterate over tokens
                     for token_index,token in enumerate(tokens):
+                        # check if word is part of any token
                         if word in token:
                             index=token_index
+                            print(sys.stderr,"containing word found at index :",str(index))
+
                             break	# found the token containing this word
                 else:
-                    index = tokens.index(word)	# tokens.index(word)sss
+                    # pick the first index of 'word' in token list 'tokens'
+                    index = tokens.index(word)	# tokens.index(word)
+                    print(sys.stderr,"exact word found at index :",str(index))
 
-                self.debug("INDEX_FOUND_AT:"+str(index))
 
                 # word lies in first half of the sentence
                 if index<num_of_tokens/2:
@@ -172,7 +180,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                     start_index,end_index = self.getIndicesFirstHalf(index,num_of_tokens)
                     self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
 
-                # word lies in second half of the sentence
+# word lies in second half of the sentence
                 if index>num_of_tokens/2:
                     start_index,end_index = self.getIndicesSecondHalf(index, num_of_tokens)
                     self.debug("lies in second half")
@@ -189,11 +197,23 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                 # get sequence model for tokens in give index range
                 feature_dict = self.getSequenceModelForIndexRange(result_tuple,index,start_index, end_index)
 
-        else:	# sentence doesn't contains the NP
+                # update feature for multiword NP
+                feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
+
+        else:	# sentence doesn't contains the head NP
             self.debug("word not in line")
             if self.k_param==KPARAM:
                 feature_dict = self.getFullSentenceSequenceModel(result_tuple)
             else:
                 feature_dict = self.getKSequenceModel(result_tuple)
 
+
+
         return (feature_dict,category.strip(),word)
+
+    # method to place feature value for W0 as NP if its a multiword NP
+    def update_feature_dict(self, feature_dict, word, old_word,index):
+        if word!=old_word:
+            _tag = "W"+str(index)
+            feature_dict[_tag] = "NN"
+        return feature_dict
