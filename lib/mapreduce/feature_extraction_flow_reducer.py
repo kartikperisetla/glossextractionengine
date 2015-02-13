@@ -9,11 +9,12 @@ class FeatureExtractionFlowReducer:
     def process(self, line):
         if line.strip()!="":
             _collection = line.split("\t")
-            category = _collection[0]
-            feature_dict = _collection[1]
+            word = _collection[0]
+            category = _collection[1]
+            feature_dict = _collection[2]
 
             feature_category_tuple = (feature_dict,category)
-            print feature_category_tuple,"\n"
+            print feature_category_tuple
 
 
 if __name__ == '__main__':

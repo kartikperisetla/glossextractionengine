@@ -13,11 +13,12 @@ from lib.feature_extractor.pos_context_sequence_feature_extractor import POSCont
 class FeatureExtractionFlowMapper:
     def __init__(self):
         # get hold of suitable feature extractor
-        self.feature_extractor = POSContextSequenceFeatureExtractor()
+        # k_param: pass 4 tokens as context window length:
+        self.feature_extractor = POSContextSequenceFeatureExtractor(k_param=4)
 
     def process(self, line):
-        feature_dict,category = self.feature_extractor.extract_features(line)
-        print category,"\t",feature_dict
+        feature_dict,category,word = self.feature_extractor.extract_features(line)
+        print word,"\t",category,"\t",feature_dict
 
 
 if __name__ == '__main__':
