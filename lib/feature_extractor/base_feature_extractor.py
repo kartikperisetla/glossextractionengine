@@ -22,4 +22,14 @@ class BaseFeatureExtractor:
             return result
         return None
 
-
+    # method to apply transformation
+    # params:
+    # transformation_collection: list of transformation objects that will be applied on given text
+    # text: text on which transformation is to be applied
+    def apply_transformation(self, transformation_collection, instance):
+        if not transformation_collection is None:
+            for _transformation_instance in transformation_collection:
+                text = _transformation_instance.transform(text=instance)
+            return text
+        else:
+            return None

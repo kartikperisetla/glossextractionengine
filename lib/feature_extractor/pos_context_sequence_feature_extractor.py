@@ -149,6 +149,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         # if sentence contains the NP
         if word in sentence.lower():
             self.debug("word in sentence")
+            # print(sys.stderr,"word in sentence:going for getFullSentenceSequenceModel")
             # tokens in sentence is less or equal to k param
             if len(tokens)<=self.k_param:
                 feature_dict = self.getFullSentenceSequenceModel(result_tuple)
@@ -167,6 +168,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                 # word lies in first half of the sentence
                 if index<num_of_tokens/2:
                     self.debug("lies in lower half")
+                    # print(sys.stderr,"word lies in lower half:going for getIndicesFirstHalf")
                     start_index,end_index = self.getIndicesFirstHalf(index,num_of_tokens)
                     self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
 
@@ -174,12 +176,14 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                 if index>num_of_tokens/2:
                     start_index,end_index = self.getIndicesSecondHalf(index, num_of_tokens)
                     self.debug("lies in second half")
+                    # print(sys.stderr,"word lies in second half:going for getIndicesSecondHalf")
                     self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
 
                 # word lies in middle of the sentence
                 if index == num_of_tokens/2:
                     start_index,end_index = self.getIndicesForMiddleWord(index,num_of_tokens)
                     self.debug("lies at the middle")
+                    # print(sys.stderr,"word lies in middle :going for getIndicesForMiddleWord")
                     self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
 
                 # get sequence model for tokens in give index range
@@ -192,4 +196,4 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             else:
                 feature_dict = self.getKSequenceModel(result_tuple)
 
-        return (feature_dict,category)
+        return (feature_dict,category.strip(),word)
