@@ -14,7 +14,7 @@ class FeatureExtractionFlowReducer:
                 category = _collection[1]
                 feature_dict = _collection[2]
 
-                feature_category_tuple = (word,feature_dict,category)
+                feature_category_tuple = (feature_dict,category.strip())
                 print feature_category_tuple
 
 
