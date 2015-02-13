@@ -20,7 +20,6 @@ class FeatureExtractionFlowMapper:
         feature_dict,category,word = self.feature_extractor.extract_features(line)
         print word,"\t",category,"\t",feature_dict
 
-
 if __name__ == '__main__':
     _instance = FeatureExtractionFlowMapper()
 
