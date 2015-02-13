@@ -28,7 +28,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
     # method that generates sequence model considering all words in the sentence
     # params- result_tuple with category, word, tokens
     def getFullSentenceSequenceModel(self, result_tuple):
-        category,word,tokens,sentence = result_tuple
+        category,word,tokens,sentence,_old_word = result_tuple
         pos_tags = nltk.pos_tag(tokens)
         feature_dict = {}
         for i,tpl in enumerate(pos_tags):
@@ -42,7 +42,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
     # params- result_tuple with category, word, tokens
     # returns a dictionary with features
     def getKSequenceModel(self, result_tuple):
-        category,word,tokens,sentence = result_tuple
+        category,word,tokens,sentence,_old_word = result_tuple
         pos_tags = nltk.pos_tag(tokens)
         feature_dict = {}
         for i,tpl in enumerate(pos_tags):
@@ -88,7 +88,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     # method that reads tokens and returns feature_dict
     def getSequenceModelForIndexRange(self,result_tuple,index,start_index,end_index):
-        category,word,tokens,sentence = result_tuple
+        category,word,tokens,sentence,_old_word = result_tuple
         pos_tags = nltk.pos_tag(tokens)
 
         self.debug(pos_tags)

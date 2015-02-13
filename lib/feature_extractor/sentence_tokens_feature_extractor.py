@@ -49,4 +49,4 @@ class SentenceTokensFeatureExtractor(BaseFeatureExtractor):
             # flow for test instances
             sentence=items[1]
             tokens=nltk.word_tokenize(sentence)
-            return (None,None,tokens,sentence)
+            return (None,None,tokens,sentence,None)
