@@ -3,6 +3,7 @@
 __author__ = 'kartik'
 
 import re
+import string
 
 from lib.utils.wiki_extractor_util import clean
 
@@ -77,3 +78,8 @@ class RegexHandler:
 
         # line=re.sub(r'\|','',line)
         return line
+
+    # method to remove non (alphanumeric and punctuation)
+    def give_printable_string(self, line):
+        filtered_string = filter(lambda x: x in string.printable, line)
+        return filtered_string
