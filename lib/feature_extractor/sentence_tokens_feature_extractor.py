@@ -6,7 +6,8 @@ sys.path.insert(0, 'glossextractionengine.mod')
 __author__ = 'kartik'
 
 from lib.feature_extractor.base_feature_extractor import BaseFeatureExtractor
-from lib.transformation.remove_non_english_tokens_transformation import RemoveNonEnglishTokensTransformation
+from lib.transformation.remove_non_alphanumeric import RemoveNonAlphanumericTransformation
+from lib.utils.regex_handler import RegexHandler
 import re,nltk
 
 # method that extracts basic sentence features like tokens, instance_name in instance provided
@@ -17,8 +18,6 @@ class SentenceTokensFeatureExtractor(BaseFeatureExtractor):
     # returns: a tuple of (category, word, tokens, sentence)
     def extract_features(self, instance):
         # calling base class method for applying transformation before feature extraction
-        instance = self.apply_transformation([RemoveNonEnglishTokensTransformation()],instance)
-
         line = instance.lower()
         # split the instance
         items = line.split(" | ")
@@ -33,15 +32,19 @@ class SentenceTokensFeatureExtractor(BaseFeatureExtractor):
             category = collection[0].strip()
             # get the instance_name or Head NP or NP of our interest
             word = collection[1].strip()
+            _old_word = word
+            word = self.apply_transformation([RemoveNonAlphanumericTransformation()],word)
+            word_replacement=re.sub(r' +','',word)
 
             # get the sentence on right side of '|'
             sentence = items[1]
-
-            word_replacement=re.sub(r' ','',word)
+            # remove non alphanumeric chars from sentence
+            sentence = self.apply_transformation([RemoveNonAlphanumericTransformation()],sentence)
             sentence = re.sub(word,word_replacement,sentence)
+
             tokens = nltk.word_tokenize(sentence)
             word = word_replacement
-            return (category,word,tokens,sentence)
+            return (category.strip(),word,tokens,sentence,_old_word)
         else:
             # flow for test instances
             sentence=items[1]
