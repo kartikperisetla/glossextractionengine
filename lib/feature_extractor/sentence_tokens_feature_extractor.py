@@ -22,6 +22,10 @@ class SentenceTokensFeatureExtractor(BaseFeatureExtractor):
         # split the instance
         items = line.split(" | ")
 
+        # malformed instance
+        if len(items)<=1:
+            return None
+
         # get hold of the first part
         var = items[0]
         collection = var.split("'")

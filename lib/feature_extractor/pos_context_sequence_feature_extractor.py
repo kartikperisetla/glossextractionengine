@@ -131,6 +131,10 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
     def extract_features(self, instance):
         _sentence_feature_extractor = SentenceTokensFeatureExtractor()
         result_tuple = _sentence_feature_extractor.extract_features(instance)
+        # malformed instance
+        if result_tuple is None:
+            return (None,None,None)
+
         category,word,tokens,sentence,_old_word = result_tuple
 
         # if using test instance
