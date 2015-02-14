@@ -59,6 +59,7 @@ class BaseModeler(object):
         _pobj = open(_location,"wb")
         # save the entity as pickle file with name provided in param
         pickle.dump(self.entity, _pobj)
+        _pobj.close()
 
     # method to load the model from pickle file
     # it updates the self.entity attribute once it loads the model from pickle file
