@@ -20,38 +20,29 @@ class RandomSampler(BaseSampler):
     def getPositiveSamples(self, indices):
         buff=""
         r = RegexHandler()
-
+        _fh = open("pos_samples","w")
+        _fh.close()
         for index in indices:
             line = linecache.getline(self.positiveSource,index)
             line = r.get_clean_line_for_sampling(line)
+            buff = line+"\n"
+            positive_sampling=open("pos_samples","a")
+            positive_sampling.write(buff)
+            positive_sampling.close()
 
-            if line.strip()=="":
-                print "+ve blank at:",index
-            else:
-                buff=buff+line+"\n"
 
-        positive_sampling=open("pos_samples","w")
-        positive_sampling.write(buff)
-        positive_sampling.close()
         print "gen +ve samples:",len(indices)
 
     # method to get negative samples
     def getNegativeSamples(self, indices):
         buff=""
         r = RegexHandler()
-
+        _fh = open("neg_samples","w")
+        _fh.close()
         for index in indices:
             line = linecache.getline(self.negativeSource,index)
             line = r.get_clean_line_for_sampling(line)
-
-            if line.strip()=="":
-                print "-ve blank at:",index
-            else:
-                buff=buff+line+"\n"
-
-
-        buff=buff[:-1]
-        negative_sampling=open("neg_samples","w")
-        negative_sampling.write(buff)
-        negative_sampling.close()
-        print "gen -ve samples:",len(indices)
+            buff = line+"\n"
+            negative_sampling=open("neg_samples","a")
+            negative_sampling.write(buff)
+            negative_sampling.close()
