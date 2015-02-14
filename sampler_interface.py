@@ -3,7 +3,6 @@
 __author__ = 'kartik'
 
 import sys
-
 from lib.sampler.random_sampler import RandomSampler
 
 # class to do sampling
