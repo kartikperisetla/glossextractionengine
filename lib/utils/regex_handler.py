@@ -83,3 +83,8 @@ class RegexHandler:
     def give_printable_string(self, line):
         filtered_string = filter(lambda x: x in string.printable, line)
         return filtered_string
+
+    # method to get alphanumeric version of a string
+    def get_alphanumeric(self, line):
+        result = re.sub(r'[^a-zA-Z0-9]',' ', line)
+        return result
