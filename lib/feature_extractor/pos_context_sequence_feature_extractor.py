@@ -11,7 +11,7 @@ import re,nltk
 KPARAM = "ALL"
 PRIME_FEATURE_LENGTH = 4
 
-# method that extracts contextual features based on Part of speech tags around the word of interest
+# class that extracts contextual features based on Part of speech tags around the word of interest
 class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     def __init__(self, k_param=KPARAM,prime_feature_length=PRIME_FEATURE_LENGTH):
