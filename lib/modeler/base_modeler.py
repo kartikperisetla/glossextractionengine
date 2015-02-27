@@ -1,7 +1,12 @@
 __author__ = 'kartik'
 
-import pickle,os
+import pickle,os,sys
 from ast import literal_eval
+
+sys.path.insert(0, '.')
+sys.path.insert(0, 'glossextractionengine.mod')
+sys.path.insert(0, 'glossextractionengine.mod/saved_models')
+
 
 #class to train the model and generate the classifier
 class BaseModeler(object):
@@ -87,3 +92,7 @@ class BaseModeler(object):
     # must be overriden in derived implementation
     def test(self,**kwargs):
         pass
+
+    def classify(self, test_feature_dict):
+        result_category = self.entity.classify(test_feature_dict)
+        return result_category

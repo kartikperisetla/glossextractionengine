@@ -1,7 +1,7 @@
 __author__ = 'kartik'
 
 from lib.modeler.base_modeler import BaseModeler
-import nltk
+
 
 class POSContextSequenceModeler(BaseModeler):
 
@@ -10,4 +10,5 @@ class POSContextSequenceModeler(BaseModeler):
 
     def train(self):
         _train_feature_collection = self.get_feature_collection()
+        import nltk
         self.entity = nltk.MaxentClassifier.train(_train_feature_collection, algorithm='GIS', trace=0)
