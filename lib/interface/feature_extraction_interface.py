@@ -3,7 +3,7 @@ __author__ = 'kartik'
 import sys,os,time
 
 # Usage:
-# python feature_extraction_launcher.py <dataset_location> <train_set_size> <test_set_size>
+# python feature_extraction_interface.py <dataset_location> <train_set_size> <test_set_size>
 # python glossextractionengine/launcher_interface.py final_dataset/ 5000 2000
 
 class FeatureExtractionLauncher:
@@ -25,31 +25,31 @@ class FeatureExtractionLauncher:
         os.system(_cmd)
         time.sleep(5)
 
-    def remove_training_dir_on_hdfs(self):
+    def remove_dataset_dir_on_hdfs(self):
         self.check_params()
         # remove training directory on HDFS
-        _cmd = "hadoop fs -rmr /user/hadoop/train"
+        _cmd = "hadoop fs -rmr /user/hadoop/feature_extraction_input"
         os.system(_cmd)
         time.sleep(5)
 
     def remove_output_dir_on_hdfs(self):
         self.check_params()
         # remove output directory on HDFS
-        _cmd = "hadoop fs -rmr /user/hadoop/output"
+        _cmd = "hadoop fs -rmr /user/hadoop/feature_extraction_output"
         os.system(_cmd)
         time.sleep(5)
 
-    def load_training_data_on_hdfs(self):
+    def load_data_set_on_hdfs(self):
         self.check_params()
         # load new training data on HDFS
-        _cmd = "hadoop fs -put Train/train_set_w_tags /user/hadoop/train/"
+        _cmd = "hadoop fs -put Train/train_set_w_tags /user/hadoop/feature_extraction_input/"
         os.system(_cmd)
         time.sleep(10)
 
     def start_feature_extraction_job(self):
         self.check_params()
         # start feature extraction
-        _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/train -mapper glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py -file glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py -reducer glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -file glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -file glossextractionengine.mod -output /user/hadoop/output"
+        _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/feature_extraction_input -mapper glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py -file glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py -reducer glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -file glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -file glossextractionengine.mod -output /user/hadoop/feature_extraction_output"
         os.system(_cmd)
         time.sleep(5)
         print "completed hadoop job..."
@@ -60,16 +60,19 @@ class FeatureExtractionLauncher:
         if not os.path.exists("FeatureCollection"):
             os.system("mkdir FeatureCollection")
 
-        _cmd = "hadoop fs -getmerge /user/hadoop/output ./FeatureCollection/"+str(self.training_set_size)+"_output.txt"
+        _cmd = "hadoop fs -getmerge /user/hadoop/feature_extraction_output ./FeatureCollection/"+str(self.training_set_size)+"_output.txt"
         os.system(_cmd)
         print "saved output: FeatureCollection/"+str(self.training_set_size)+"_output.txt"
 
+    # method to perform sequence of operations before launching a map-reduce job for feature extraction
     def launch(self):
         self.check_params()
+        # interact with sampling interface for sampling
         self.invoke_sampling()
-        self.remove_training_dir_on_hdfs()
+        self.remove_dataset_dir_on_hdfs()
         self.remove_output_dir_on_hdfs()
-        self.load_training_data_on_hdfs()
+        self.load_data_set_on_hdfs()
+        # start the feature extraction job
         self.start_feature_extraction_job()
         self.export_output_from_hdfs()
 
@@ -77,7 +80,7 @@ class FeatureExtractionLauncher:
 if __name__=="__main__":
     if len(sys.argv)<4:
         print ":( not enough params"
-        print "usage: python feature_extraction_launcher.py <dataset_location> <train_set_size> <test_set_size>"
+        print "usage: python feature_extraction_interface.py <dataset_location> <train_set_size> <test_set_size>"
         # print sys.argv
     else:
         _data_location = sys.argv[1]

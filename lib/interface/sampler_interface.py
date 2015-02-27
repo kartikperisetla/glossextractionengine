@@ -6,11 +6,12 @@ import sys
 from lib.sampler.random_sampler import RandomSampler
 
 # class to do sampling
-class SamplingStub:
+class SamplingInterface:
 
     def sample(self):
         if len(sys.argv)<5:
-            print " usage: python SamplingStub.py <positive_source_file> <negative_source>file> <train_set_size> <test_set_size>"
+            print ":( not enough params"
+            print " usage: python sample_interface.py <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>"
             return
 
         positive_source_file = sys.argv[1]
@@ -23,8 +24,7 @@ class SamplingStub:
 
         print "SamplingStub: sampling done."
 
-
-s= SamplingStub()
+s = SamplingInterface()
 s.sample()
 
 

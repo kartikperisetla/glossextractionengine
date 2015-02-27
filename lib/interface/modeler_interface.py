@@ -40,6 +40,7 @@ class ModelingStub:
 
                 _instance = POSContextSequenceModeler(feature_set_location = _path)
                 _instance.train()
+                print "ModelingStub:trained the model.about to save."
                 _instance.save_model(name=_model_name,location="Saved_Models")
                 print "ModelingStub:modeling done for:",_file
 
