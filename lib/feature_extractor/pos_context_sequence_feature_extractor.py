@@ -127,7 +127,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     # method that takes instance as input and returns feature vector and optional category label
     # params: instance of format- <category> '<instance_name> | <instance>
-    # returns: a tuple of (category, word, tokens, sentence)
+    # returns: a tuple of (<feature_dict>, <category>, <word>) or a list of such tuples
     def extract_features(self, instance):
         _sentence_feature_extractor = SentenceTokensFeatureExtractor()
         result_tuple = _sentence_feature_extractor.extract_features(instance)
@@ -144,14 +144,14 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             else:
                 feature_dict = self.getKSequenceModel(result_tuple)
 
-            return (feature_dict,None)
+            return (feature_dict,None, None)
 
 
         tokens_set = set(tokens)
         num_of_tokens = len(tokens)
 
         # if sentence contains the NP
-        if word in sentence.lower():
+        if word.lower() in sentence.lower():
             self.debug("word in sentence")
             print(sys.stderr,"word:",word," sentence:",sentence)
 
@@ -211,9 +211,10 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             else:
                 feature_dict = self.getKSequenceModel(result_tuple)
 
+        if not category is None:
+            category = category.strip()
 
-
-        return (feature_dict,category.strip(),word)
+        return (feature_dict,category,word)
 
     # method to place feature value for W0 as NP if its a multiword NP
     def update_feature_dict(self, feature_dict, word, old_word,index):

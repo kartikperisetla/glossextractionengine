@@ -7,7 +7,7 @@ sys.path.insert(0, 'glossextractionengine.mod')
 from lib.feature_extractor.base_feature_extractor import BaseFeatureExtractor
 from lib.transformation.remove_non_alphanumeric import RemoveNonAlphanumericTransformation
 from lib.utils.regex_handler import RegexHandler
-import re,nltk
+import re
 
 class MaltParsedSentenceFeatureExtractor(BaseFeatureExtractor):
 
@@ -67,7 +67,7 @@ class MaltParsedSentenceFeatureExtractor(BaseFeatureExtractor):
         return tuple_collection
 
 
-s = "Guests/NNS invited/VBD to/TO the/DT presidential/JJ ball/NN will/MD have/VB to/TO wear/VB tuxedoes/NNS ./.      1"
-m = MaltParsedSentenceFeatureExtractor()
-print m.extract_features(s)
+# s = "Guests/NNS invited/VBD to/TO the/DT presidential/JJ ball/NN will/MD have/VB to/TO wear/VB tuxedoes/NNS ./.      1"
+# m = MaltParsedSentenceFeatureExtractor()
+# print m.extract_features(s)
 

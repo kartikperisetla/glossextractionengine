@@ -5,7 +5,7 @@ sys.path.insert(0, 'glossextractionengine.mod')
 
 from lib.feature_extractor.base_feature_extractor import BaseFeatureExtractor
 from lib.feature_extractor.malt_parsed_sentence_feature_extractor import MaltParsedSentenceFeatureExtractor
-import re,nltk
+import re
 
 KPARAM = "ALL"
 PRIME_FEATURE_LENGTH = 4
@@ -128,7 +128,7 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     # method that takes instance as input and returns feature vector and optional category label
     # params: instance of format- <category> '<instance_name> | <instance>
-    # returns: a tuple of (<feature_dict>, <category>, <word>)
+    # returns: a tuple of (<feature_dict>, <category>, <word>) or a list of such tuples
     def extract_features(self, instance):
         _sentence_feature_extractor = MaltParsedSentenceFeatureExtractor()
         result_tuple = _sentence_feature_extractor.extract_features(instance)
@@ -142,8 +142,17 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             return (None,None,None)
 
         # call _get_seq_model after copying attributes from MaltParsedFeatureExtactor
-        result = self._get_seq_model(result_tuple)
-        return result
+
+        # depending on if result_tuple is list or single tuple, take action
+        if isinstance(result_tuple,list):
+            result_list = []
+            for _item in result_tuple:
+                result_item = self._get_seq_model(_item)
+                result_list.append(result_item)
+            return result_list
+        else:
+            result = self._get_seq_model(result_tuple)
+            return result
 
     def _get_seq_model(self, result_tuple):
         category,word,tokens,sentence,_old_word = result_tuple
@@ -155,16 +164,16 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             else:
                 feature_dict = self.getKSequenceModel(result_tuple)
 
-            return (feature_dict,None)
+            return (feature_dict,None, None)
 
 
         tokens_set = set(tokens)
         num_of_tokens = len(tokens)
 
         # if sentence contains the NP
-        if word in sentence.lower():
+        if word.lower() in sentence.lower():
             self.debug("word in sentence")
-            print(sys.stderr,"word:",word," sentence:",sentence)
+            # print(sys.stderr,"word:",word," sentence:",sentence)
 
             # print(sys.stderr,"word in sentence:going for getFullSentenceSequenceModel")
 
@@ -179,13 +188,13 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                         # check if word is part of any token
                         if word in token:
                             index=token_index
-                            print(sys.stderr,"containing word found at index :",str(index))
+                            # print(sys.stderr,"containing word found at index :",str(index))
 
                             break	# found the token containing this word
                 else:
                     # pick the first index of 'word' in token list 'tokens'
                     index = tokens.index(word)	# tokens.index(word)
-                    print(sys.stderr,"exact word found at index :",str(index))
+                    # print(sys.stderr,"exact word found at index :",str(index))
 
 
                 # word lies in first half of the sentence
@@ -212,8 +221,8 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                 # get sequence model for tokens in give index range
                 feature_dict = self.getSequenceModelForIndexRange(result_tuple,index,start_index, end_index)
 
-                # update feature for multiword NP
-                feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
+                # update feature for multi-word NP
+                # feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
 
         else:	# sentence doesn't contains the head NP
             self.debug("word not in line")
@@ -223,12 +232,20 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                 feature_dict = self.getKSequenceModel(result_tuple)
 
 
+        if not category is None:
+            category = category.strip()
 
-        return (feature_dict,category.strip(),word)
+        return (feature_dict,category,word)
 
-    # method to place feature value for W0 as NP if its a multiword NP
-    def update_feature_dict(self, feature_dict, word, old_word,index):
-        if word!=old_word:
-            _tag = "W"+str(index)
-            feature_dict[_tag] = "NN"
-        return feature_dict
+    # # method to place feature value for W0 as NP if its a multiword NP
+    # def update_feature_dict(self, feature_dict, word, old_word`,index):
+    #     if word!=old_word:
+    #         _tag = "W"+str(index)
+    #         feature_dict[_tag] = "NN"
+    #     return feature_dict
+
+
+
+#
+# m = MaltParsedPOSContextSequenceFeatureExtractor(k_param=4)
+# m.extract_features("Guests/NNS invited/VBD to/TO the/DT presidential/JJ ball/NN will/MD have/VB to/TO wear/VB tuxedoes/NNS ./.      1")
