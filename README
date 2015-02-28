@@ -49,4 +49,3 @@ The framework comes packaged with:
 	*(1) operation name: 'sampling' , parameters: <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>*
 
 	*(2) operation name: 'extract_features' , parameters: <dataset_location> <train_set_size> <test_set_size>*
-
