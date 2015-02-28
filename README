@@ -27,3 +27,16 @@ The framework comes packaged with:
 	**MaltParsedSentenceFeatureExtractor**: extracts basic sentence features for sentences that are parsed with malt parser( i.e tokens in sentence have pos tags with them)
 
 	**MaltParsedPOSContextSequenceFeatureExtractor**: extracts contextual features based on Part of speech tags around the word of interest for sentences that are parsed with malt parser( i.e tokens in sentence have pos tags with them)
+
+6. **Interfaces**: You can interact with samplers and feature extractors through a simple command
+	**SamplingInterface**: to interact with Samplers
+	```
+	#!python
+	python sample_interface.py <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>
+	```
+
+	***FeatureExtractionInterface**: to interact with Feature Extractors
+	```
+	#!python
+	python feature_extraction_interface.py <dataset_location> <train_set_size> <test_set_size>
+	```
