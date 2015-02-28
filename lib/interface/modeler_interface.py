@@ -5,6 +5,8 @@ from lib.modeler.pos_context_sequence_modeler import POSContextSequenceModeler
 
 # class that provides interface to modeling
 class ModelingStub:
+
+    # start the modeling using the feature set
     def model(self):
         if len(sys.argv)<2:
             print ":( not enough params"
@@ -14,7 +16,6 @@ class ModelingStub:
             return
 
         _feature_set_location = sys.argv[1]
-
 
         if os.path.isfile(_feature_set_location):
             if len(sys.argv)<3:

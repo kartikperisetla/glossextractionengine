@@ -60,7 +60,7 @@ class FeatureExtractionLauncher:
         if not os.path.exists("FeatureCollection"):
             os.system("mkdir FeatureCollection")
 
-        _cmd = "hadoop fs -getmerge /user/hadoop/feature_extraction_output ./FeatureCollection/"+str(self.training_set_size)+"_output.txt"
+        _cmd = "hadoop fs -getmerge /user/hadoop/feature_extraction_output ./feature_set_for_modeling/"+str(self.training_set_size)+"_output.txt"
         os.system(_cmd)
         print "saved output: FeatureCollection/"+str(self.training_set_size)+"_output.txt"
 
