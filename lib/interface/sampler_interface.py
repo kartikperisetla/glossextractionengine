@@ -3,7 +3,11 @@
 __author__ = 'kartik'
 
 import sys
+sys.path.insert(0, 'glossextractionengine.mod')
+
 from lib.sampler.random_sampler import RandomSampler
+
+_prefix = 'glossextractionengine/lib/interface'
 
 # class to do sampling
 class SamplingInterface:

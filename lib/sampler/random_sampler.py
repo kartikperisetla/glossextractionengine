@@ -31,8 +31,6 @@ class RandomSampler(BaseSampler):
             positive_sampling.close()
 
 
-        print "gen +ve samples:",len(indices)
-
     # method to get negative samples
     def getNegativeSamples(self, indices):
         buff=""

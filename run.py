@@ -1,6 +1,8 @@
 __author__ = 'kartik'
 
 import sys,os
+sys.path.insert(0,".")
+_prefix = 'glossextractionengine/lib/interface'
 
 SAMPLING = "sampling"
 FEATURE_EXTRACTION = "extract_features"
@@ -34,10 +36,7 @@ class InterfaceWrapper:
         if sys.argv[1]==DEFAULT:
             self.run_default_flow()
 
-    # method to run default behavior- here framework handles everything- sampling, feature extraction, modeling
-    # user just needs to provide required paramers
-    def run_default_flow(self):
-        pass
+
 
     # method to run sampling
     def run_sampling(self):
@@ -48,7 +47,7 @@ class InterfaceWrapper:
         else:
             # launch sampling
             args_list = sys.argv[2:]
-            _cmd = "python sample_interface.py "+' '.join(args_list)
+            _cmd = "python "+_prefix+"/"+"sample_interface.py "+' '.join(args_list)
             print "cmd: ",_cmd
             self.invoke(_cmd)
             pass
@@ -61,7 +60,7 @@ class InterfaceWrapper:
         else:
             # launch feature extraction here
             args_list = sys.argv[2:]
-            _cmd = "python feature_extraction_interface.py "+' '.join(args_list)
+            _cmd = "python "+_prefix+"/"+"feature_extraction_interface.py "+' '.join(args_list)
             print "cmd: ",_cmd
             self.invoke(_cmd)
             pass
@@ -76,12 +75,34 @@ class InterfaceWrapper:
         else:
             # launch sampling
             args_list = sys.argv[2:]
-            _cmd = "python modeler_interface.py "+' '.join(args_list)
+            _cmd = "python "+_prefix+"/"+"modeler_interface.py "+' '.join(args_list)
             print "cmd: ",_cmd
             self.invoke(_cmd)
             pass
 
+    # method to run default behavior- here framework handles everything- sampling, feature extraction, modeling
+    # user just needs to provide required parameters
+    def run_default_flow(self):
+        if len(sys.argv)<5:
+                print "default: not enough params"
+                print " usage: python run.py default <dataset_location> <train_set_size> <test_set_size>"
+        else:
+            # launch feature extraction
+            args_list = sys.argv[2:5]
+            _cmd = "python "+_prefix+"/"+"feature_extraction_interface.py "+' '.join(args_list)
+            print "cmd: ",_cmd
+            self.invoke(_cmd)
 
+            # if feature extraction was successful then proceed for modeling
+            print "OS:LISTDIR",os.listdir(".")
+            if os.path.exists("feature_set_for_modeling"):
+                # launch modeling
+                args_list = sys.argv[5:]
+                _cmd = "python "+_prefix+"/"+"modeler_interface.py "+_prefix+"/feature_set_for_modeling"
+            else:
+                print "unable to find the directory 'feature_set_for_modeling'"
+
+    # method to invoke the commands
     def invoke(self, cmd):
         os.system(cmd)
 
