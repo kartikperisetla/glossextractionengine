@@ -1,13 +1,24 @@
-GlossExtractionEngine
+**GlossExtractionEngine**
+
 It is a framework to extract definitional sentences from large datasets. 
 
 The core of the framework is based on the filters, transformations, parsers, feature extractors, samplers and modelers you use. Thus it is extensible and customizable for your needs. All you need to do is extend the base functionatlity and write your own filters, transformations, parsers, feature extractors, samplers and modelers. 
 
 The framework comes packaged with:
+
+
 1. Filters: Basic sentence length filter.
+
+
 2. Transformations: lowercase transformation, remove non alphanumeric transformation, remove non english tokens, wiktionary definition transformation
+
+
 3. Parsers: Wikipedia parser flow as the map-reduce paradigm.
-4. Samplers: Random sampler
+
+
+4. Samplers: Random sampler(basic random sampler implementation)
+
+
 5. Feature Extractors: 
 	SentenceTokensFeatureExtractor- extracts basic sentence features like tokens
 	POSContextSequenceFeatureExtractor- extracts contextual features based on Part of speech tags around the word of interest(head noun phrase)
