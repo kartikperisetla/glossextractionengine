@@ -7,8 +7,7 @@ The core of the framework is based on the filters, transformations, parsers, fea
 The framework comes packaged with:
 
 
-1. **Filters**: 
-	Basic sentence length filter.
+1. **Filters**: Basic sentence length filter.
 
 
 2. **Transformations**: 
