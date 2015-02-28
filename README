@@ -7,27 +7,27 @@ The core of the framework is based on the filters, transformations, parsers, fea
 The framework comes packaged with:
 
 
-1. Filters: 
+1. **Filters**: 
 	Basic sentence length filter.
 
 
-2. Transformations: 
+2. **Transformations**: 
 	Lowercase transformation, remove non alphanumeric transformation, remove non english tokens, wiktionary definition transformation
 
 
-3. Parsers: 
+3. **Parsers**: 
 	Wikipedia parser flow as the map-reduce paradigm.
 
 
-4. Samplers: 
+4. **Samplers**: 
 	Random sampler(basic random sampler implementation)
 
 
-5. Feature Extractors: 
-	SentenceTokensFeatureExtractor: extracts basic sentence features like tokens
+5. **Feature Extractors**: 
+	**SentenceTokensFeatureExtractor**: extracts basic sentence features like tokens
 
-	POSContextSequenceFeatureExtractor: extracts contextual features based on Part of speech tags around the word of interest(head noun phrase)
+	**POSContextSequenceFeatureExtractor**: extracts contextual features based on Part of speech tags around the word of interest(head noun phrase)
 
-	MaltParsedSentenceFeatureExtractor: extracts basic sentence features for sentences that are parsed with malt parser( i.e tokens in sentence have pos tags with them)
-	
-	MaltParsedPOSContextSequenceFeatureExtractor: extracts contextual features based on Part of speech tags around the word of interest for sentences that are parsed with malt parser( i.e tokens in sentence have pos tags with them)
+	**MaltParsedSentenceFeatureExtractor**: extracts basic sentence features for sentences that are parsed with malt parser( i.e tokens in sentence have pos tags with them)
+
+	**MaltParsedPOSContextSequenceFeatureExtractor**: extracts contextual features based on Part of speech tags around the word of interest for sentences that are parsed with malt parser( i.e tokens in sentence have pos tags with them)
