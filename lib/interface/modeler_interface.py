@@ -1,6 +1,8 @@
 __author__ = 'kartik'
 
 import sys,os
+sys.path.insert(0, 'glossextractionengine.mod')
+
 from lib.modeler.pos_context_sequence_modeler import POSContextSequenceModeler
 
 # class that provides interface to modeling
@@ -28,22 +30,25 @@ class ModelingStub:
             _model_name = sys.argv[2]
             _instance = POSContextSequenceModeler(feature_set_location = _feature_set_location)
             _instance.train()
-            _instance.save_model(name=_model_name,location="Saved_Models")
+            _instance.save_model(name=_model_name,location="trained_models")
 
             print "ModelingStub: modeling done for given feature set file."
 
         if os.path.isdir(_feature_set_location):
-            print "ModelingStub:looking into feature set directory..."
-            file_list = os.listdir(_feature_set_location)
+            print "ModelingStub: looking into feature set directory..."
+
+            # filter only feature set files with .txt extension
+            file_list = [fn for fn in os.listdir(_feature_set_location) if fn.endswith(('.txt'))]
+
             for _file in file_list:
                 _path = _feature_set_location+"/"+_file
                 _model_name = _file+".model"
 
                 _instance = POSContextSequenceModeler(feature_set_location = _path)
                 _instance.train()
-                print "ModelingStub:trained the model.about to save."
+                print "ModelingStub: trained the model.about to save."
                 _instance.save_model(name=_model_name,location="Saved_Models")
-                print "ModelingStub:modeling done for:",_file
+                print "ModelingStub: modeling done for:",_file
 
 
             print "ModelingStub: modeling done for all files in directory provided."
