@@ -8,7 +8,7 @@ _prefix = 'glossextractionengine/lib/interface'
 # Usage:
 # python feature_extraction_interface.py <dataset_location> <train_set_size> <test_set_size>
 
-class FeatureExtractionLauncher:
+class FeatureExtractionInterface:
 
     def __init__(self, data_location):
         self.data_location = data_location
@@ -60,9 +60,17 @@ class FeatureExtractionLauncher:
 
     def export_output_from_hdfs(self):
         self.check_params()
+
+        # create the output directory for featuer extraction job
         if not os.path.exists("feature_set_for_modeling"):
             os.system("mkdir feature_set_for_modeling")
 
+        # remove previous version of the feature set file in the output directory
+        if os.path.exists("./feature_set_for_modeling/"+str(self.training_set_size)+"_output.txt"):
+            print "FeatureExtractionInterface: File already exists.. removing it :","./feature_set_for_modeling/"+str(self.training_set_size)+"_output.txt"
+            os.remove("./feature_set_for_modeling/"+str(self.training_set_size)+"_output.txt")
+
+        # get the merged output from HDFS
         _cmd = "hadoop fs -getmerge /user/hadoop/feature_extraction_output ./feature_set_for_modeling/"+str(self.training_set_size)+"_output.txt"
         os.system(_cmd)
         print "Saved output[Feature set for modeling] at : feature_set_for_modeling/"+str(self.training_set_size)+"_output.txt"
@@ -90,7 +98,7 @@ if __name__=="__main__":
         training_set_size = sys.argv[2]
         test_set_size = sys.argv[3]
 
-        l = FeatureExtractionLauncher(data_location=_data_location)
+        l = FeatureExtractionInterface(data_location=_data_location)
         l.training_set_size = training_set_size
         l.test_set_size = test_set_size
         l.launch()
