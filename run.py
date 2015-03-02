@@ -1,6 +1,6 @@
 __author__ = 'kartik'
 
-import sys,os
+import sys,os,os.path
 sys.path.insert(0,".")
 _prefix = 'glossextractionengine/lib/interface'
 
@@ -82,6 +82,7 @@ class InterfaceWrapper:
 
     # method to run default behavior- here framework handles everything- sampling, feature extraction, modeling
     # user just needs to provide required parameters
+    # this runs: sampling->feature extraction->modeling
     def run_default_flow(self):
         if len(sys.argv)<5:
                 print "default: not enough params"
@@ -94,11 +95,12 @@ class InterfaceWrapper:
             self.invoke(_cmd)
 
             # if feature extraction was successful then proceed for modeling
-            print "OS:LISTDIR",os.listdir(".")
-            if os.path.exists("feature_set_for_modeling"):
+            if os.path.exists("./feature_set_for_modeling"):
+                print "Launching modeler with extracted feature set..."
                 # launch modeling
                 args_list = sys.argv[5:]
-                _cmd = "python "+_prefix+"/"+"modeler_interface.py "+_prefix+"/feature_set_for_modeling"
+                _cmd = "python "+_prefix+"/"+"modeler_interface.py ./feature_set_for_modeling"
+                self.invoke(_cmd)
             else:
                 print "unable to find the directory 'feature_set_for_modeling'"
 
