@@ -49,3 +49,29 @@ The framework comes packaged with:
 	*(1) operation name: 'sampling' , parameters: <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>*
 
 	*(2) operation name: 'extract_features' , parameters: <dataset_location> <train_set_size> <test_set_size>*
+
+		you will get a directory named 'feature_set_for_modeling' as the output in 'extract_features' mode of operation
+
+	*(3) operation name: 'modeling'
+
+		if you want to generate model for one feature set file:
+		parameters:<feature_set_file_location> <model_name_to_save_as>
+		
+		if you want to generate models for different feature set files:
+		parameters:<feature_set_location_directory>
+
+	*(4) operation name: 'classification' , parameters: <dataset_location> <model_file>
+
+	*(5) operation name: 'default' , parameters: <train_dataset_location> <sampling_train_set_size> <sampling_test_set_size> <test_dataset_location> <model_name>
+
+			This mode basically executes the default behavior/flow of the framework. i.e. it handles sampling, feature extraction, modeling and classification flows for you with just single command.
+
+			<train_dataset_location> is the location where your training dataset is present.
+
+			<sampling_train_set_size> is the training dataset you want as output of random sampling
+
+			<sampling_test_set_size> is the test dataset you want as output of random sampling(basically for validation). Give 0 if you are using different actual test dataset.
+
+			<test_dataset_location> is the location where your test dataset is present.
+
+			<model_name> is the name of the model file that you want to use for classification on test dataset.
