@@ -7,6 +7,7 @@ _prefix = 'glossextractionengine/lib/interface'
 SAMPLING = "sampling"
 FEATURE_EXTRACTION = "extract_features"
 MODELING = "modeling"
+CLASSIFICATION = "classification"
 DEFAULT = "default"
 
 # class to do sampling
@@ -32,6 +33,9 @@ class InterfaceWrapper:
 
         if sys.argv[1]==MODELING:
             self.run_modeling()
+
+        if sys.argv[1]==CLASSIFICATION:
+            self.run_classification()
 
         if sys.argv[1]==DEFAULT:
             self.run_default_flow()
@@ -80,13 +84,27 @@ class InterfaceWrapper:
             self.invoke(_cmd)
             pass
 
+    # method to run the classification
+    def run_classification(self):
+        if len(sys.argv)<3:
+                print "classification: not enough params"
+                print " usage: python run.py modeling <dataset_location> <model_file>"
+        else:
+            # launch classification
+            args_list = sys.argv[2:]
+            _cmd = "python "+_prefix+"/"+"classification_interface.py "+' '.join(args_list)
+            print "cmd: ",_cmd
+            self.invoke(_cmd)
+            pass
+
     # method to run default behavior- here framework handles everything- sampling, feature extraction, modeling
     # user just needs to provide required parameters
     # this runs: sampling->feature extraction->modeling
     def run_default_flow(self):
         if len(sys.argv)<5:
                 print "default: not enough params"
-                print " usage: python run.py default <dataset_location> <train_set_size> <test_set_size>"
+                #                       0       1       2                   3               4               5
+                print " usage: python run.py default <dataset_location> <train_set_size> <test_set_size> <test_dataset_location> <model_name>"
         else:
             # launch feature extraction
             args_list = sys.argv[2:5]
@@ -97,12 +115,21 @@ class InterfaceWrapper:
             # if feature extraction was successful then proceed for modeling
             if os.path.exists("./feature_set_for_modeling"):
                 print "Launching modeler with extracted feature set..."
-                # launch modeling
-                args_list = sys.argv[5:]
+                # launch modeling with default feature set location as input to modeler
                 _cmd = "python "+_prefix+"/"+"modeler_interface.py ./feature_set_for_modeling"
                 self.invoke(_cmd)
             else:
                 print "unable to find the directory 'feature_set_for_modeling'"
+
+            # if the modeling was successful then proceed for classification
+            if os.path.exists("./trained_models"):
+                print "Launching classification with trained model from ./trained_models"
+                # launch classification
+                args_list = sys.argv[5:]
+                _cmd = "python "+_prefix+"/"+"classification_interface.py "+' '.join(args_list)
+                self.invoke(_cmd)
+            else:
+                print "unable to find the directory 'trained_models'"
 
     # method to invoke the commands
     def invoke(self, cmd):
