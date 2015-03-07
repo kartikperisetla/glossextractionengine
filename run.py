@@ -75,7 +75,7 @@ class InterfaceWrapper:
                 print "modeling: not enough params"
                 print " usage: python run.py modeling <feature_set_file_location> <model_name_to_save_as>"
                 print "or"
-                print " usage: python modeler_interface.py <feature_set_location_directory>"
+                print " usage: python run.py modeling <feature_set_location_directory>"
         else:
             # launch sampling
             args_list = sys.argv[2:]
@@ -104,7 +104,7 @@ class InterfaceWrapper:
         if len(sys.argv)<5:
                 print "default: not enough params"
                 #                       0       1       2                   3               4               5
-                print " usage: python run.py default <dataset_location> <train_set_size> <test_set_size> <test_dataset_location> <model_name>"
+                print " usage: python run.py default <train_dataset_location> <sampling_train_set_size> <sampling_test_set_size> <test_dataset_location> <model_name>"
         else:
             # launch feature extraction
             args_list = sys.argv[2:5]
