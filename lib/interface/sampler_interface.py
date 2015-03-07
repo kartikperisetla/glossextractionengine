@@ -5,25 +5,38 @@ __author__ = 'kartik'
 import sys
 sys.path.insert(0, 'glossextractionengine.mod')
 
+
 from lib.sampler.random_sampler import RandomSampler
 from lib.utils.dynamic_class_loader import DynamicClassLoader
+from lib.utils.arg_parser import ArgParser
 
 _prefix = 'glossextractionengine/lib/interface'
 
 # class to do sampling
 class SamplingInterface:
+    def __init__(self):
+        self.arg_obj = ArgParser()
+
+    def check_params(self):
+        if not self.arg_obj.args.has_key("sampler") or not self.arg_obj.args.has_key("positive") or not self.arg_obj.args.has_key("negative") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("test_size"):
+            return False
+        else:
+            return True
 
     def sample(self):
-        if len(sys.argv)<5:
+        self.arg_obj.parse(sys.argv)
+        print self.arg_obj.args
+
+        if not self.check_params():
             print ":( not enough params"
-            print " usage: python sample_interface.py <sampler_implementation> <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>"
+            print " usage: python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>"
             return
 
-        sampler_implementation = sys.argv[1]
-        positive_source_file = sys.argv[2]
-        negative_source_file = sys.argv[3]
-        train_set_size = sys.argv[4]
-        test_set_size = sys.argv[5]
+        sampler_implementation = self.arg_obj.args["sampler"]
+        positive_source_file = self.arg_obj.args["positive"]
+        negative_source_file = self.arg_obj.args["negative"]
+        train_set_size = self.arg_obj.args["train_size"]
+        test_set_size = self.arg_obj.args["test_size"]
 
         # this dynamically loads the concrete implementation of sampler
         _dyn_cls_loader = DynamicClassLoader()
