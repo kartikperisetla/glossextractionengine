@@ -46,7 +46,10 @@ The framework comes packaged with:
 
 	**supported operations(NOTE: Use operation name without quotes)**
 
-	*(1) operation name: 'sampling' , parameters: <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>*
+	*(1) operation name: 'sampling' , parameters: <sampler_implementation> <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>*
+
+	Example:
+		> python glossextractionengine/run.py  sampling lib.sampler.random_sampler.RandomSampler final_dataset/positive_instances  final_dataset/negative_instances  200 10
 
 	*(2) operation name: 'extract_features' , parameters: <dataset_location> <train_set_size> <test_set_size>*
 
