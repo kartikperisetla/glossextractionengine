@@ -10,49 +10,50 @@ MODELING = "modeling"
 CLASSIFICATION = "classification"
 DEFAULT = "default"
 
+from lib.utils.arg_parser import ArgParser
+
 # class to do sampling
 class InterfaceWrapper:
+    def __init__(self):
+        self.arg_obj = ArgParser()
 
     def run(self):
-        print sys.argv
-        if len(sys.argv)<2:
+        # print sys.argv
+        self.arg_obj.parse(sys.argv)
+        print self.arg_obj.args
+
+        if not self.arg_obj.args.has_key("operation"):
             print ":( not enough params"
-            print "usage: python run.py <operation_name> <parameters for operation>"
+            print "usage: python run.py -operation <operation_name> <parameters for operation>"
             print "******supported operations******"
-            print "(1) operation name: sampling"," parameters: <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>"
+            print "(1) operation name: sampling"," parameters: -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>"
 
             print "(2) operation name: extract_features"," parameters: <dataset_location> <train_set_size> <test_set_size>"
 
             return
 
-        if sys.argv[1] == SAMPLING:
+        if self.arg_obj.args["operation"] == SAMPLING:
             self.run_sampling()
 
-        if sys.argv[1] == FEATURE_EXTRACTION:
+        if self.arg_obj.args["operation"] == FEATURE_EXTRACTION:
             self.run_feature_extraction()
 
-        if sys.argv[1]==MODELING:
+        if self.arg_obj.args["operation"] == MODELING:
             self.run_modeling()
 
-        if sys.argv[1]==CLASSIFICATION:
+        if self.arg_obj.args["operation"] == CLASSIFICATION:
             self.run_classification()
 
-        if sys.argv[1]==DEFAULT:
+        if self.arg_obj.args["operation"] == DEFAULT:
             self.run_default_flow()
 
     # method to run sampling
     def run_sampling(self):
-        if len(sys.argv)<7:
-                print "sampling: not enough params"
-                print " usage: python run.py sampling <sampler_implementation> <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>"
-
-        else:
-            # launch sampling
-            args_list = sys.argv[2:]
-            _cmd = "python "+_prefix+"/"+"sampler_interface.py "+' '.join(args_list)
-            print "cmd: ",_cmd
-            self.invoke(_cmd)
-            pass
+        # launch sampling
+        _cmd = "python "+_prefix+"/"+"sampler_interface.py "+"-sampler " +self.arg_obj.args["sampler"]+" -positive "+self.arg_obj.args["positive"]+" -negative "+self.arg_obj.args["negative"]+" -train_size " +self.arg_obj.args["train_size"] +" -test_size " +self.arg_obj.args["test_size"]
+        print "cmd: ",_cmd
+        self.invoke(_cmd)
+        pass
 
     # method to run feature extraction
     def run_feature_extraction(self):
