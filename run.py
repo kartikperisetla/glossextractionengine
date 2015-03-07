@@ -44,14 +44,14 @@ class InterfaceWrapper:
 
     # method to run sampling
     def run_sampling(self):
-        if len(sys.argv)<6:
+        if len(sys.argv)<7:
                 print "sampling: not enough params"
-                print " usage: python run.py sampling <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>"
+                print " usage: python run.py sampling <sampler_implementation> <positive_source_file> <negative_source_file> <train_set_size> <test_set_size>"
 
         else:
             # launch sampling
             args_list = sys.argv[2:]
-            _cmd = "python "+_prefix+"/"+"sample_interface.py "+' '.join(args_list)
+            _cmd = "python "+_prefix+"/"+"sampler_interface.py "+' '.join(args_list)
             print "cmd: ",_cmd
             self.invoke(_cmd)
             pass
@@ -134,7 +134,6 @@ class InterfaceWrapper:
     # method to invoke the commands
     def invoke(self, cmd):
         os.system(cmd)
-
 
 i = InterfaceWrapper()
 i.run()
