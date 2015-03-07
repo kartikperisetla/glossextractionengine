@@ -42,7 +42,10 @@ class ModelingStub:
 
             for _file in file_list:
                 _path = _feature_set_location+"/"+_file
-                _model_name = _file+".model"
+
+                _coll = _file.split(".")
+
+                _model_name = _coll[0]+".model"
 
                 _instance = POSContextSequenceModeler(feature_set_location = _path)
                 _instance.train()
