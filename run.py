@@ -40,8 +40,6 @@ class InterfaceWrapper:
         if sys.argv[1]==DEFAULT:
             self.run_default_flow()
 
-
-
     # method to run sampling
     def run_sampling(self):
         if len(sys.argv)<7:
@@ -60,7 +58,7 @@ class InterfaceWrapper:
     def run_feature_extraction(self):
         if len(sys.argv)<5:
                 print "extract_features: not enough params"
-                print " usage: python run.py extract_features <dataset_location> <train_set_size> <test_set_size>"
+                print " usage: python run.py extract_features <feature_extraction_mapper> <mapper_params> <feature_extraction_reducer> <reducer_params> <dataset_location> <train_set_size> <test_set_size>"
         else:
             # launch feature extraction here
             args_list = sys.argv[2:]
