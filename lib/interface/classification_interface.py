@@ -50,7 +50,8 @@ class ClassificationInterface:
         print "Launching map-reduce classification task..."
 
         # start classification
-        _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/classification_input -mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py -file glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py -reducer glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -file glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -file glossextractionengine.mod -output /user/hadoop/classification_output -file" + self.model_file + " -jobconf mapred.job.name='GlossExtractionEngine:Classification"
+        _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/classification_input -mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py -file glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py -reducer 'glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py "+self.model_file+"' -file glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -file glossextractionengine.mod -output /user/hadoop/classification_output -file ./trained_models/" + self.model_file + " -jobconf mapred.job.name='GlossExtractionEngine:Classification'"
+        print _cmd
         os.system(_cmd)
         time.sleep(5)
         print "classification task completed."
