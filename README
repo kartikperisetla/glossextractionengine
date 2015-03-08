@@ -34,7 +34,7 @@ The framework comes packaged with:
         *python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>* 
 	
 
-	***FeatureExtractionInterface**: to interact with Feature Extractors
+	**FeatureExtractionInterface**: to interact with Feature Extractors
 	
 	*python feature_extraction_interface.py -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size>*
 
@@ -69,12 +69,12 @@ The framework comes packaged with:
 		parameters: -feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>
 		
 		if you want to generate models for different feature set files:
-		parameters: -feature_set_location <feature_set_location_directory>
+		parameters: -feature_set_location <feature_set_location_directory>*
 
 	Example:	
 		> python glossextractionengine/run.py  -operation modeling -feature_set_location feature_set_for_modeling/
 
-	*(4) operation name: 'classification' , parameters: -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location> -model <model_file>
+	*(4) operation name: 'classification' , parameters: -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location> -model <model_file>*
 
 		--> if you want to provide custom parameters to mapper and reducer for classification operation, just remember that model file will be the first parameter to them followed by custom parameters
 
