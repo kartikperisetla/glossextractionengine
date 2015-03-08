@@ -28,7 +28,7 @@ class InterfaceWrapper:
             print "******supported operations******"
             print "(1) operation name: sampling"," parameters: -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>"
 
-            print "(2) operation name: extract_features"," parameters: <dataset_location> <train_set_size> <test_set_size>"
+            print "(2) operation name: extract_features"," parameters: -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset  <dataset_location> -train_size <train_set_size> -test_size <test_set_size>"
 
             return
 
@@ -50,23 +50,18 @@ class InterfaceWrapper:
     # method to run sampling
     def run_sampling(self):
         # launch sampling
-        _cmd = "python "+_prefix+"/"+"sampler_interface.py "+"-sampler " +self.arg_obj.args["sampler"]+" -positive "+self.arg_obj.args["positive"]+" -negative "+self.arg_obj.args["negative"]+" -train_size " +self.arg_obj.args["train_size"] +" -test_size " +self.arg_obj.args["test_size"]
+        _cmd = "python "+_prefix+"/"+"sampler_interface.py " + self.arg_obj.get_string()
         print "cmd: ",_cmd
         self.invoke(_cmd)
         pass
 
     # method to run feature extraction
     def run_feature_extraction(self):
-        if len(sys.argv)<5:
-                print "extract_features: not enough params"
-                print " usage: python run.py extract_features <feature_extraction_mapper> <mapper_params> <feature_extraction_reducer> <reducer_params> <dataset_location> <train_set_size> <test_set_size>"
-        else:
-            # launch feature extraction here
-            args_list = sys.argv[2:]
-            _cmd = "python "+_prefix+"/"+"feature_extraction_interface.py "+' '.join(args_list)
-            print "cmd: ",_cmd
-            self.invoke(_cmd)
-            pass
+        # launch feature extraction here
+        _cmd = "python "+_prefix+"/"+"feature_extraction_interface.py " + self.arg_obj.get_string()
+        print "cmd: ",_cmd
+        self.invoke(_cmd)
+        pass
 
     # method to run modeling
     def run_modeling(self):
