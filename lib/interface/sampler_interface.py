@@ -17,13 +17,19 @@ class SamplingInterface:
     def __init__(self):
         self.arg_obj = ArgParser()
 
+    # method to show help message
+    def show_help(self):
+        print ":( not enough params"
+        print " usage: python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>"
+        exit()
+
     # method that checks if required parameters are there or not
     # returns False if the required params are missing
     # returns True if all the required params are provided
     def check_params(self):
         print "sampler checking:",self.arg_obj.args
         if not self.arg_obj.args.has_key("sampler") or not self.arg_obj.args.has_key("positive") or not self.arg_obj.args.has_key("negative") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("test_size"):
-            return False
+            self.show_help()
         else:
             return True
 
@@ -31,10 +37,8 @@ class SamplingInterface:
         self.arg_obj.parse(sys.argv)
         print self.arg_obj.args
 
-        if not self.check_params():
-            print ":( not enough params"
-            print " usage: python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>"
-            return
+        # check if required parameters are provided
+        self.check_params()
 
         sampler_implementation = self.arg_obj.args["sampler"]
         positive_source_file = self.arg_obj.args["positive"]
