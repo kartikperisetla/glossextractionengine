@@ -17,8 +17,12 @@ class SamplingInterface:
     def __init__(self):
         self.arg_obj = ArgParser()
 
+    # method that checks if required parameters are there or not
+    # returns False if the required params are missing
+    # returns True if all the required params are provided
     def check_params(self):
-        if not self.arg_obj.args.has_key("sampler") or not self.arg_obj.args.has_key("positive") or not self.arg_obj.args.has_key("negative") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("test_size"):
+        print "sampler checking:",self.arg_obj.args
+        if not self.arg_obj.args.has_key("sampler") or not self.arg_obj.args.has_key("positive") or not self.arg_obj.args.has_key("negative") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("test_size"):
             return False
         else:
             return True
