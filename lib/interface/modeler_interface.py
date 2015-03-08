@@ -31,7 +31,7 @@ class ModelingStub:
     # start the modeling using the feature set
     def model(self):
         self.arg_obj.parse(sys.argv)
-        
+
         if not self.check_params():
             self.show_help()
 

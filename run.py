@@ -17,20 +17,28 @@ class InterfaceWrapper:
     def __init__(self):
         self.arg_obj = ArgParser()
 
+    # method to show help message
+    def show_help(self):
+        print ":( not enough params"
+        print "usage: python run.py -operation <operation_name> <parameters for operation>"
+        print "******supported operations******"
+        print "(1) operation name: sampling"," parameters: -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>"
+
+        print "(2) operation name: extract_features"," parameters: -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset  <dataset_location> -train_size <train_set_size> -test_size <test_set_size>"
+
+        print "(3) operation name: modeling","\n-->parameters when using single feature set file: -feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>","\n-->parameters when using directory containing feature set files: -feature_set_location <feature_set_location_directory>"
+
+        print "(4) operation name: classification"," parameters: -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location> -model <model_file>"
+
+        exit()
+
     def run(self):
         # print sys.argv
         self.arg_obj.parse(sys.argv)
         print self.arg_obj.args
 
         if not self.arg_obj.args.has_key("operation"):
-            print ":( not enough params"
-            print "usage: python run.py -operation <operation_name> <parameters for operation>"
-            print "******supported operations******"
-            print "(1) operation name: sampling"," parameters: -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>"
-
-            print "(2) operation name: extract_features"," parameters: -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset  <dataset_location> -train_size <train_set_size> -test_size <test_set_size>"
-
-            return
+            self.show_help()
 
         if self.arg_obj.args["operation"] == SAMPLING:
             self.run_sampling()
@@ -65,31 +73,21 @@ class InterfaceWrapper:
 
     # method to run modeling
     def run_modeling(self):
-        if len(sys.argv)<3:
-                print "modeling: not enough params"
-                print " usage: python run.py modeling <feature_set_file_location> <model_name_to_save_as>"
-                print "or"
-                print " usage: python run.py modeling <feature_set_location_directory>"
-        else:
-            # launch sampling
-            args_list = sys.argv[2:]
-            _cmd = "python "+_prefix+"/"+"modeler_interface.py "+' '.join(args_list)
-            print "cmd: ",_cmd
-            self.invoke(_cmd)
-            pass
+        # launch modeling
+        args_list = sys.argv[2:]
+        _cmd = "python "+_prefix+"/"+"modeler_interface.py " + self.arg_obj.get_string()
+        print "cmd: ",_cmd
+        self.invoke(_cmd)
+        pass
 
     # method to run the classification
     def run_classification(self):
-        if len(sys.argv)<3:
-                print "classification: not enough params"
-                print " usage: python run.py modeling <dataset_location> <model_file>"
-        else:
-            # launch classification
-            args_list = sys.argv[2:]
-            _cmd = "python "+_prefix+"/"+"classification_interface.py "+' '.join(args_list)
-            print "cmd: ",_cmd
-            self.invoke(_cmd)
-            pass
+        # launch classification
+        args_list = sys.argv[2:]
+        _cmd = "python "+_prefix+"/"+"classification_interface.py " + self.arg_obj.get_string()
+        print "cmd: ",_cmd
+        self.invoke(_cmd)
+        pass
 
     # method to run default behavior- here framework handles everything- sampling, feature extraction, modeling
     # user just needs to provide required parameters
