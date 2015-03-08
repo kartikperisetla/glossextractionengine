@@ -56,10 +56,10 @@ The framework comes packaged with:
 		-this operation will implicitly invoke sampling operation on dataset provided
 		-you will get a directory named 'feature_set_for_modeling' as the output in 'extract_features' mode of operation
 
-	Example:
+	Example: using feature extractors provided by framework:
 		> python glossextractionengine/run.py -operation extract_features -fe_mapper glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py  -fe_reducer glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -train_dataset final_dataset/ -train_size 200 -test_size 10 -positive final_dataset/positive_instances  -negative final_dataset/negative_instances  -sampler lib.sampler.random_sampler.RandomSampler
 
-	Example:
+	Example: using your own custom feature extractors:
 		> python glossextractionengine/run.py -operation extract_features -fe_mapper kartik_fe_map.py -fe_reducer kartik_fe_red.py  -train_dataset final_dataset/ -train_size 200 -test_size 10 -sampler lib.sampler.random_sampler.RandomSampler -positive final_dataset/positive_instances -negative final_dataset/negative_instances
 
 
@@ -71,7 +71,15 @@ The framework comes packaged with:
 		if you want to generate models for different feature set files:
 		parameters: -feature_set_location <feature_set_location_directory>
 
-	*(4) operation name: 'classification' , parameters: <dataset_location> <model_file>
+	Example:	
+		> python glossextractionengine/run.py  -operation modeling -feature_set_location feature_set_for_modeling/
+
+	*(4) operation name: 'classification' , parameters: -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location> -model <model_file>
+
+		--> if you want to provide custom parameters to mapper and reducer for classification operation, just remember that model file will be the first parameter to them followed by custom parameters
+
+	Example:
+		> python glossextractionengine/run.py -operation classification -cl_mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py  -cl_reducer glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -test_dataset test_data/ -model trained_models/200_output.model
 
 	*(5) operation name: 'default' , parameters: <train_dataset_location> <sampling_train_set_size> <sampling_test_set_size> <test_dataset_location> <model_name>
 
