@@ -24,16 +24,20 @@ class FeatureExtractionInterface:
         self.training_set_size = None
         self.test_set_size = None
 
-
+    # method to show help message
+    def show_help(self):
+        print ":( not enough params"
+        print "usage: python feature_extraction_interface.py -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size>"
+        exit()
 
     # method that checks if required parameters are there or not
     # returns False if the required params are missing
     # returns True if all the required params are provided
     def check_params(self):
+        # mapper and reducer params might be optional- thus they are not required
         if not self.arg_obj.args.has_key("fe_mapper") or  not self.arg_obj.args.has_key("fe_reducer") or not self.arg_obj.args.has_key("train_dataset") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("test_size") :
-            return False
-        else:
-            return True
+            self.show_help()
+            exit()
 
     # method that invokes sampling- it assumes that positive instances file is named 'positive_instances' and negative instances file is named 'negative_instances'
     def invoke_sampling(self):
@@ -79,7 +83,6 @@ class FeatureExtractionInterface:
         self.check_params()
         print "Launching map-reduce feature extraction task..."
         # start feature extraction
-        # _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/feature_extraction_input -mapper glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py -file glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py -reducer glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -file glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -file glossextractionengine.mod -output /user/hadoop/feature_extraction_output -jobconf mapred.job.name='GlossExtractionEngine:FeatureExtraction'"
 
         _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/feature_extraction_input -mapper '"+ self.feature_extraction_mapper
 
@@ -136,10 +139,8 @@ if __name__=="__main__":
         _instance.arg_obj.parse(sys.argv)
         print _instance.arg_obj.args
 
-        if not _instance.check_params():
-            print ":( not enough params"
-            print "usage: python feature_extraction_interface.py -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size>"
-            exit()
+        # check if required parameters are provided
+        _instance.check_params()
 
         # set mapper
         _instance.feature_extraction_mapper = _instance.arg_obj.args["fe_mapper"]
