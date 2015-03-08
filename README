@@ -63,13 +63,19 @@ The framework comes packaged with:
 		> python glossextractionengine/run.py -operation extract_features -fe_mapper kartik_fe_map.py -fe_reducer kartik_fe_red.py  -train_dataset final_dataset/ -train_size 200 -test_size 10 -sampler lib.sampler.random_sampler.RandomSampler -positive final_dataset/positive_instances -negative final_dataset/negative_instances
 
 
-	*(3) operation name: 'modeling'
+	*(3) operation name: 'modeling'*
+
 
 		if you want to generate model for one feature set file:
+
+
 		parameters: -feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>
 		
+
 		if you want to generate models for different feature set files:
-		parameters: -feature_set_location <feature_set_location_directory>*
+
+
+		parameters: -feature_set_location <feature_set_location_directory>
 
 	Example:	
 		> python glossextractionengine/run.py  -operation modeling -feature_set_location feature_set_for_modeling/
