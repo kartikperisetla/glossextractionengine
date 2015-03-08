@@ -3,31 +3,46 @@ __author__ = 'kartik'
 import sys,os
 sys.path.insert(0, 'glossextractionengine.mod')
 
+from lib.utils.arg_parser import ArgParser
 from lib.modeler.pos_context_sequence_modeler import POSContextSequenceModeler
 
 # class that provides interface to modeling
 class ModelingStub:
+    def __init__(self):
+        self.arg_obj = ArgParser()
+
+    # method that checks if required parameters are there or not
+    # returns False if the required params are missing
+    # returns True if all the required params are provided
+    def check_params(self):
+        print "modeler checking:",self.arg_obj.args
+        if not self.arg_obj.args.has_key("feature_set_location"):
+            return False
+        else:
+            return True
+    # method to show error message
+    def show_help(self):
+        print ":( not enough params"
+        print "usage: python modeler_interface.py -feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>"
+        print "==or=="
+        print "usage: python modeler_interface.py -feature_set_location <feature_set_location_directory>"
+        exit()
 
     # start the modeling using the feature set
     def model(self):
-        if len(sys.argv)<2:
-            print ":( not enough params"
-            print "usage: python modeler_interface.py <feature_set_file_location> <model_name_to_save_as>"
-            print "==or=="
-            print "usage: python modeler_interface.py <feature_set_location_directory>"
-            return
+        self.arg_obj.parse(sys.argv)
+        
+        if not self.check_params():
+            self.show_help()
 
-        _feature_set_location = sys.argv[1]
+        _feature_set_location = self.arg_obj.args["feature_set_location"]
 
         if os.path.isfile(_feature_set_location):
-            if len(sys.argv)<3:
-                print ":( not enough params"
-                print "usage: python modeler_interface.py <feature_set_file_location> <model_name_to_save_as>"
-                print "==or=="
-                print "usage: python modeler_interface.py <feature_set_location_directory>"
-                return
+            # if given a file path and not provided the model name to save as
+            if not self.arg_obj.args.has_key("model_name"):
+                self.show_help()
 
-            _model_name = sys.argv[2]
+            _model_name = self.arg_obj.args["model_name"]
             _instance = POSContextSequenceModeler(feature_set_location = _feature_set_location)
             _instance.train()
             _instance.save_model(name=_model_name,location="trained_models")
