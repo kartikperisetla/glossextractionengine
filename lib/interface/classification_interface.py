@@ -3,22 +3,37 @@ __author__ = 'kartik'
 import sys,os,time
 _prefix = 'glossextractionengine/lib/interface'
 
+sys.path.insert(0, 'glossextractionengine.mod')
+
+from lib.utils.arg_parser import ArgParser
+
 # class to invoke the classification task
 class ClassificationInterface:
 
     # params:
     # data_location: location where test dataset is located on local filesystem
     # model_file: path to model file to be used for classification
-    def __init__(self, data_location, model_file):
+    def __init__(self, data_location=None, model_file=None):
+        self.arg_obj = ArgParser()
         # this is the local location where test dataset is located
         self.data_location = data_location
         self.model_file = model_file
+        self.classification_mapper = None
+        self.classification_reducer = None
+        self.mapper_param = None
+        self.reducer_param = None
+
+    # method to show help message
+    def show_help(self):
+        print ":( not enough params"
+        print "usage: python classification_interface.py -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location> -model <model_file>"
+        exit()
 
     # method to check if all the necessary parameters are provided
     def check_params(self):
-        if self.data_location is None or self.model_file is None :
-            print "You need to specify data_location, model file before invoking any operation."
-            exit()
+        # mapper and reducer params might be optional- thus they are not required
+        if not self.arg_obj.args.has_key("test_dataset") or not self.arg_obj.args.has_key("model") or not self.arg_obj.args.has_key("cl_mapper") or not self.arg_obj.args.has_key("cl_reducer"):
+            self.show_help()
 
     # method to remove the dataset directory on HDFS
     def remove_dataset_dir_on_hdfs(self):
@@ -50,7 +65,26 @@ class ClassificationInterface:
         print "Launching map-reduce classification task..."
 
         # start classification
-        _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/classification_input -mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py -file glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py -reducer 'glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py "+self.model_file+"' -file glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -file glossextractionengine.mod -output /user/hadoop/classification_output -file ./trained_models/" + self.model_file + " -jobconf mapred.job.name='GlossExtractionEngine:Classification'"
+        # _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/classification_input -mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py -file glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py -reducer 'glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py "+self.model_file+"' -file glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -file glossextractionengine.mod -output /user/hadoop/classification_output -file trained_models/" + self.model_file + " -jobconf mapred.job.name='GlossExtractionEngine:Classification'"
+
+        _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/classification_input -mapper '"+ self.classification_mapper
+
+        if self.arg_obj.args.has_key("model"):
+            _cmd = _cmd +" " +self.model_file
+
+        if self.arg_obj.args.has_key("cl_mapper_params"):
+            _cmd = _cmd + " " + self.mapper_param
+
+        _cmd = _cmd + "' -file "+ self.classification_mapper +" -reducer '"+ self.classification_reducer
+
+        if self.arg_obj.args.has_key("model"):
+            _cmd = _cmd + " " +self.model_file
+
+        if self.arg_obj.args.has_key("cl_reducer_params"):
+            _cmd = _cmd + " " + self.reducer_param
+
+        _cmd = _cmd + "' -file "+ self.classification_reducer + " -file glossextractionengine.mod -output /user/hadoop/classification_output -file " + self.model_file + " -jobconf mapred.job.name='GlossExtractionEngine:Classification'"
+
         print _cmd
         os.system(_cmd)
         time.sleep(5)
@@ -81,13 +115,21 @@ class ClassificationInterface:
 
 
 if __name__=="__main__":
-    if len(sys.argv)<3:
-        print ":( not enough params"
-        print "usage: python classification_interface.py <dataset_location> <model_file>"
-        # print sys.argv
-    else:
-        _dataset_location = sys.argv[1]
-        _model_file = sys.argv[2]
 
-        c = ClassificationInterface(data_location=_dataset_location, model_file=_model_file)
-        c.launch()
+    _instance = ClassificationInterface()
+    _instance.arg_obj.parse(sys.argv)
+    _instance.check_params()
+
+    _instance.data_location = _instance.arg_obj.args["test_dataset"]
+    _instance.model_file = _instance.arg_obj.args["model"]
+
+    _instance.classification_mapper = _instance.arg_obj.args["cl_mapper"]
+    if _instance.arg_obj.args.has_key("cl_mapper_params"):
+        _instance.mapper_param = _instance.arg_obj.args["cl_mapper_params"]
+
+    _instance.classification_reducer = _instance.arg_obj.args["cl_reducer"]
+
+    if _instance.arg_obj.args.has_key("cl_reducer_params"):
+        _instance.reducer_param = _instance.arg_obj.args["cl_reducer_params"]
+
+    _instance.launch()
