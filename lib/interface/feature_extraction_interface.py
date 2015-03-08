@@ -1,6 +1,9 @@
 __author__ = 'kartik'
 
 import sys,os,time
+sys.path.insert(0, 'glossextractionengine.mod')
+
+from lib.utils.arg_parser import ArgParser
 
 _prefix = 'glossextractionengine/lib/interface'
 
@@ -10,6 +13,8 @@ _prefix = 'glossextractionengine/lib/interface'
 class FeatureExtractionInterface:
 
     def __init__(self, data_location=None):
+        self.arg_obj = ArgParser()
+
         self.data_location = data_location
         self.sampler = None
         self.feature_extraction_mapper = None
@@ -19,17 +24,29 @@ class FeatureExtractionInterface:
         self.training_set_size = None
         self.test_set_size = None
 
+
+
     # method that checks if required parameters are there or not
+    # returns False if the required params are missing
+    # returns True if all the required params are provided
     def check_params(self):
-        if self.data_location is None or self.training_set_size is None or self.test_set_size is None or self.feature_extraction_mapper is None or self.feature_extraction_reducer is None or self.mapper_param is None or self.reducer_param is None:
-            print "You need to specify data_location, training_set_size and test_set_size before invoking any operation."
-            exit()
+        if not self.arg_obj.args.has_key("fe_mapper") or  not self.arg_obj.args.has_key("fe_reducer") or not self.arg_obj.args.has_key("train_dataset") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("test_size") :
+            return False
+        else:
+            return True
 
     # method that invokes sampling- it assumes that positive instances file is named 'positive_instances' and negative instances file is named 'negative_instances'
     def invoke_sampling(self):
         self.check_params()
         # do sampling
-        _cmd = "python "+_prefix+"/"+"sampler_interface.py "+self.sampler+"  "+self.data_location+"/positive_instances "+self.data_location+"/negative_instances "+ str(self.training_set_size)+" "+str(self.test_set_size)
+
+        # using default sampler if not provided sampler in param list
+        if not self.arg_obj.args.has_key("sampler"):
+            _sampler = "lib.sampler.random_sampler.RandomSampler"
+        else:
+            _sampler = self.arg_obj.args["sampler"]
+
+        _cmd = "python "+_prefix+"/"+"sampler_interface.py "+self.arg_obj.get_string()
         os.system(_cmd)
         time.sleep(5)
 
@@ -64,7 +81,20 @@ class FeatureExtractionInterface:
         # start feature extraction
         # _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/feature_extraction_input -mapper glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py -file glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py -reducer glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -file glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -file glossextractionengine.mod -output /user/hadoop/feature_extraction_output -jobconf mapred.job.name='GlossExtractionEngine:FeatureExtraction'"
 
-        _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/feature_extraction_input -mapper '"+ self.feature_extraction_mapper + self.mapper_param +"' -file "+ self.feature_extraction_mapper +" -reducer '"+ self.feature_extraction_reducer + self.reducer_param +"' -file "+ self.feature_extraction_reducer +" -file glossextractionengine.mod -output /user/hadoop/feature_extraction_output -jobconf mapred.job.name='GlossExtractionEngine:FeatureExtraction'"
+        _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/feature_extraction_input -mapper '"+ self.feature_extraction_mapper
+
+        # use parameters for mapper job if they are provided
+        if not self.mapper_param is None:
+            _cmd = _cmd + self.mapper_param
+
+        _cmd = _cmd + "' -file "+ self.feature_extraction_mapper +" -reducer '"+ self.feature_extraction_reducer
+
+        # use parameters for reducer job if they are provided
+        if not self.reducer_param is None:
+            _cmd = _cmd + self.reducer_param
+
+        _cmd = _cmd + "' -file "+ self.feature_extraction_reducer +" -file glossextractionengine.mod -output /user/hadoop/feature_extraction_output -jobconf mapred.job.name='GlossExtractionEngine:FeatureExtraction'"
+
         os.system(_cmd)
         time.sleep(5)
         print "feature extraction task completed."
@@ -101,26 +131,36 @@ class FeatureExtractionInterface:
 
 
 if __name__=="__main__":
-    if len(sys.argv)<7:
-        print ":( not enough params"
-        print "usage: python feature_extraction_interface.py <feature_extraction_mapper> <mapper_params> <feature_extraction_reducer> <reducer_params> <dataset_location> <train_set_size> <test_set_size>"
 
-    else:
         _instance = FeatureExtractionInterface()
+        _instance.arg_obj.parse(sys.argv)
+        print _instance.arg_obj.args
+
+        if not _instance.check_params():
+            print ":( not enough params"
+            print "usage: python feature_extraction_interface.py -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size>"
+            exit()
+
         # set mapper
-        _instance.feature_extraction_mapper = sys.argv[1]
-        # set mapper param
-        _instance.mapper_param = sys.argv[2]
+        _instance.feature_extraction_mapper = _instance.arg_obj.args["fe_mapper"]
+
+        # get mapper params if provided
+        if _instance.arg_obj.args.has_key("fe_mapper_params"):
+            # set mapper param
+            _instance.mapper_param = _instance.arg_obj.args["fe_mapper_params"]
 
         # set reducer
-        _instance.feature_extraction_reducer = sys.argv[3]
-        # set reducer param
-        _instance.reducer_param = sys.argv[4]
+        _instance.feature_extraction_reducer = _instance.arg_obj.args["fe_reducer"]
+
+        # get reducer params if provided
+        if _instance.arg_obj.args.has_key("fe_reducer_params"):
+            # set reducer param
+            _instance.reducer_param = _instance.arg_obj.args["fe_reducer_params"]
 
         # get other param
-        _data_location = sys.argv[5]
-        training_set_size = sys.argv[6]
-        test_set_size = sys.argv[7]
+        _data_location = _instance.arg_obj.args["train_dataset"]
+        training_set_size = _instance.arg_obj.args["train_size"]
+        test_set_size = _instance.arg_obj.args["test_size"]
 
         _instance.data_location = _data_location
         _instance.training_set_size = training_set_size
