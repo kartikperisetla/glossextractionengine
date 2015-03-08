@@ -69,13 +69,13 @@ The framework comes packaged with:
 		if you want to generate model for one feature set file:
 
 
-		parameters: -feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>
+		parameters: *-feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>*
 		
 
 		if you want to generate models for different feature set files:
 
 
-		parameters: -feature_set_location <feature_set_location_directory>
+		parameters: *-feature_set_location <feature_set_location_directory>*
 
 	Example:	
 		> python glossextractionengine/run.py  -operation modeling -feature_set_location feature_set_for_modeling/
@@ -87,7 +87,7 @@ The framework comes packaged with:
 	Example:
 		> python glossextractionengine/run.py -operation classification -cl_mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py  -cl_reducer glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -test_dataset test_data/ -model trained_models/200_output.model
 
-	*(5) operation name: 'default' , parameters: <train_dataset_location> <sampling_train_set_size> <sampling_test_set_size> <test_dataset_location> <model_name>
+	*(5) operation name: 'default' , parameters: <train_dataset_location> <sampling_train_set_size> <sampling_test_set_size> <test_dataset_location> <model_name>*
 
 			This mode basically executes the default behavior/flow of the framework. i.e. it handles sampling, feature extraction, modeling and classification flows for you with just single command.
 
