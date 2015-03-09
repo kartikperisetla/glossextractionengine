@@ -19,7 +19,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
     # k_param: the length n in n-grams to be considered in the context window
     # prime_feature_length: the length of context window pos tags of words falling in that window will constitute the prime feature
     # add_prime_feature: boolean flag to indicate whether to generate prime feature
-    def __init__(self, k_param,prime_feature_length=PRIME_FEATURE_LENGTH,add_prime_feature=False):
+    def __init__(self, k_param, prime_feature_length=PRIME_FEATURE_LENGTH, add_prime_feature=False):
         self.k_param = k_param
         self.prime_feature_length = prime_feature_length
         self.add_prime_feature = add_prime_feature
