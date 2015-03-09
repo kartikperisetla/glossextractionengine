@@ -137,7 +137,6 @@ if __name__=="__main__":
 
         _instance = FeatureExtractionInterface()
         _instance.arg_obj.parse(sys.argv)
-        print _instance.arg_obj.args
 
         # check if required parameters are provided
         _instance.check_params()
