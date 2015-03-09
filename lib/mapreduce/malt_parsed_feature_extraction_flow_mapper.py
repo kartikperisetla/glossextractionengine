@@ -33,7 +33,9 @@ if __name__ == '__main__':
     if len(sys.argv)<2:
         print "Too few arguments to instantiate MaltParsedFeatureExtractionFlowMapper"
         exit()
-    _args = sys.argv[1]
+
+    # use the 2nd parameter as user params since 1st param is the model file name provided by user
+    _args = sys.argv[2]
     params = _args.split("#")
     _context_window_size = int(params[0])
     _prime_feature_length = int(params[1])
