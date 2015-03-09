@@ -88,13 +88,13 @@ class FeatureExtractionInterface:
 
         # use parameters for mapper job if they are provided
         if not self.mapper_param is None:
-            _cmd = _cmd + self.mapper_param
+            _cmd = _cmd +" "+ self.mapper_param
 
         _cmd = _cmd + "' -file "+ self.feature_extraction_mapper +" -reducer '"+ self.feature_extraction_reducer
 
         # use parameters for reducer job if they are provided
         if not self.reducer_param is None:
-            _cmd = _cmd + self.reducer_param
+            _cmd = _cmd +" "+ self.reducer_param
 
         _cmd = _cmd + "' -file "+ self.feature_extraction_reducer +" -file glossextractionengine.mod -output /user/hadoop/feature_extraction_output -jobconf mapred.job.name='GlossExtractionEngine:FeatureExtraction'"
 
