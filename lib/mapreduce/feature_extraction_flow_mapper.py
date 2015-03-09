@@ -2,8 +2,6 @@
 import sys
 import re
 import cStringIO
-
-
 # add library to path
 sys.path.insert(0, 'glossextractionengine.mod')
 
