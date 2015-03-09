@@ -8,16 +8,17 @@ from lib.feature_extractor.malt_parsed_sentence_feature_extractor import MaltPar
 import re
 
 KPARAM = "ALL"
+# defines the length of n-gram to be considered in the context as prime feature of the instance
 PRIME_FEATURE_LENGTH = 4
 
 # class that extracts contextual features based on Part of speech tags around the word of interest
 # NOTE: It assumes you have pos tags and tokens already extracted either through malt parsed sentence feature extractor or by other means
 class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
-    def __init__(self, k_param=KPARAM,prime_feature_length=PRIME_FEATURE_LENGTH):
+    def __init__(self, k_param, prime_feature_length=PRIME_FEATURE_LENGTH, add_prime_feature=False):
         self.k_param = k_param
         self.prime_feature_length = prime_feature_length
-        self.add_prime_feature = False
+        self.add_prime_feature = add_prime_feature
         self.debugFlag = 0 # off by default
         pass
 
