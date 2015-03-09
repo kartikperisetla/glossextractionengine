@@ -35,8 +35,6 @@ class SamplingInterface:
 
     def sample(self):
         self.arg_obj.parse(sys.argv)
-        print self.arg_obj.args
-
         # check if required parameters are provided
         self.check_params()
 
