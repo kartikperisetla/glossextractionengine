@@ -2,7 +2,6 @@ __author__ = 'kartik'
 
 class ArgParser(object):
     def __init__(self):
-        print "ArgParser:init"
         self.args = {}
 
     def parse(self, lst):
