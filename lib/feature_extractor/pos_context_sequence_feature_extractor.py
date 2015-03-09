@@ -9,15 +9,20 @@ from lib.feature_extractor.sentence_tokens_feature_extractor import SentenceToke
 import re,nltk
 
 KPARAM = "ALL"
+
+# defines the length of n-gram to be considered in the context as prime feature of the instance
 PRIME_FEATURE_LENGTH = 4
 
 # class that extracts contextual features based on Part of speech tags around the word of interest
 class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
-
-    def __init__(self, k_param=KPARAM,prime_feature_length=PRIME_FEATURE_LENGTH):
+    # params:
+    # k_param: the length n in n-grams to be considered in the context window
+    # prime_feature_length: the length of context window pos tags of words falling in that window will constitute the prime feature
+    # add_prime_feature: boolean flag to indicate whether to generate prime feature
+    def __init__(self, k_param,prime_feature_length=PRIME_FEATURE_LENGTH,add_prime_feature=False):
         self.k_param = k_param
         self.prime_feature_length = prime_feature_length
-        self.add_prime_feature = False
+        self.add_prime_feature = add_prime_feature
         self.debugFlag = 0 # off by default
         pass
 
