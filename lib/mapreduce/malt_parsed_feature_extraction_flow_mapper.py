@@ -16,17 +16,19 @@ class MaltParsedFeatureExtractionFlowMapper:
         self.feature_extractor = MaltParsedPOSContextSequenceFeatureExtractor(k_param=context_window_size,prime_feature_length=prime_feature_length, add_prime_feature=add_prime_feature)
 
     def process(self, line):
-
-        result = self.feature_extractor.extract_features(line)
-        if isinstance(result, list):
-            for _item in result:
-                feature_dict,category,word = _item
-                # if not category is None and not word is None:
-                    # not printing category as it will be always None for Test dataset
+        try:
+            result = self.feature_extractor.extract_features(line)
+            if isinstance(result, list):
+                for _item in result:
+                    feature_dict,category,word = _item
+                    # if not category is None and not word is None:
+                        # not printing category as it will be always None for Test dataset
+                    print word,"\t",feature_dict,"\t",line
+            else:
+                feature_dict,category,word = result
                 print word,"\t",feature_dict,"\t",line
-        else:
-            feature_dict,category,word = result
-            print word,"\t",feature_dict,"\t",line
+        except:
+            pass
 
 
 if __name__ == '__main__':

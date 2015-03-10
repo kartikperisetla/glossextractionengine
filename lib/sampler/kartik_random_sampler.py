@@ -8,7 +8,7 @@ from lib.sampler.base_sampler import BaseSampler
 from lib.utils.regex_handler import RegexHandler
 
 # class for generating train and test dataset using random sampling
-class RandomSampler(BaseSampler):
+class MagicSampler(BaseSampler):
 
     # method to generate indices for random sampling
     def generateIndices(self,max_limit,num_elements):
