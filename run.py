@@ -74,7 +74,6 @@ class InterfaceWrapper:
     # method to run modeling
     def run_modeling(self):
         # launch modeling
-        args_list = sys.argv[2:]
         _cmd = "python "+_prefix+"/"+"modeler_interface.py " + self.arg_obj.get_string()
         print "cmd: ",_cmd
         self.invoke(_cmd)
@@ -83,45 +82,44 @@ class InterfaceWrapper:
     # method to run the classification
     def run_classification(self):
         # launch classification
-        args_list = sys.argv[2:]
         _cmd = "python "+_prefix+"/"+"classification_interface.py " + self.arg_obj.get_string()
         print "cmd: ",_cmd
         self.invoke(_cmd)
         pass
 
+
+    # method to check if all the necessary parameters are provided for default flow
+    def check_params(self):
+        # this checks for all params required to execute the default flow of the framework
+        # mapper and reducer params might be optional- thus they are not required
+        if not self.arg_obj.args.has_key("fe_mapper") or not self.arg_obj.args.has_key("fe_reducer") or not self.arg_obj.args.has_key("train_dataset") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("test_size") or not self.arg_obj.args.has_key("sampler") or not self.arg_obj.args.has_key("cl_mapper") or not self.arg_obj.args.has_key("cl_reducer") :
+            self.show_help()
+
     # method to run default behavior- here framework handles everything- sampling, feature extraction, modeling
     # user just needs to provide required parameters
     # this runs: sampling->feature extraction->modeling
     def run_default_flow(self):
-        if len(sys.argv)<5:
-                print "default: not enough params"
-                #                       0       1       2                   3               4               5
-                print " usage: python run.py default <train_dataset_location> <sampling_train_set_size> <sampling_test_set_size> <test_dataset_location> <model_name>"
+        self.check_params()
+
+        # launch feature extraction
+        self.run_feature_extraction()
+
+        # if feature extraction was successful then proceed for modeling
+        if os.path.exists("./feature_set_for_modeling"):
+            print "Launching modeler with extracted feature set..."
+            self.run_modeling()
+            # if model was successfully generated, set the model parameter for classification flow
+            self.arg_obj.args["model"] = "trained_models/"+str(self.arg_obj.args["train_size"])+"_output.model"
         else:
-            # launch feature extraction
-            args_list = sys.argv[2:5]
-            _cmd = "python "+_prefix+"/"+"feature_extraction_interface.py "+' '.join(args_list)
-            print "cmd: ",_cmd
-            self.invoke(_cmd)
+            print "unable to find the directory 'feature_set_for_modeling'"
 
-            # if feature extraction was successful then proceed for modeling
-            if os.path.exists("./feature_set_for_modeling"):
-                print "Launching modeler with extracted feature set..."
-                # launch modeling with default feature set location as input to modeler
-                _cmd = "python "+_prefix+"/"+"modeler_interface.py ./feature_set_for_modeling"
-                self.invoke(_cmd)
-            else:
-                print "unable to find the directory 'feature_set_for_modeling'"
-
-            # if the modeling was successful then proceed for classification
-            if os.path.exists("./trained_models"):
-                print "Launching classification with trained model from ./trained_models"
-                # launch classification
-                args_list = sys.argv[5:]
-                _cmd = "python "+_prefix+"/"+"classification_interface.py "+' '.join(args_list)
-                self.invoke(_cmd)
-            else:
-                print "unable to find the directory 'trained_models'"
+        # if the modeling was successful then proceed for classification
+        if os.path.exists("./trained_models"):
+            print "Launching classification with trained model from ./trained_models"
+            # launch classification
+            self.run_classification()
+        else:
+            print "unable to find the directory 'trained_models'"
 
     # method to invoke the commands
     def invoke(self, cmd):
