@@ -5,7 +5,9 @@ sys.path.insert(0, 'glossextractionengine.mod')
 
 from lib.feature_extractor.base_feature_extractor import BaseFeatureExtractor
 from lib.feature_extractor.malt_parsed_sentence_feature_extractor import MaltParsedSentenceFeatureExtractor
+from lib.feature_extractor.malt_parsed_lexicalized_ngrams_feature_extractor import MaltParsedLexicalizedNgramsFeatureExtractor
 import re
+from lib.filter.english_token_filter import EnglishTokenFilter
 
 KPARAM = "ALL"
 # defines the length of n-gram to be considered in the context as prime feature of the instance
@@ -20,6 +22,9 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         self.prime_feature_length = prime_feature_length
         self.add_prime_feature = add_prime_feature
         self.debugFlag = 0 # off by default
+
+        self.english_filter = EnglishTokenFilter()
+        self.lex_fe = MaltParsedLexicalizedNgramsFeatureExtractor(n=2)
         pass
 
     def debug(self,s):
@@ -158,6 +163,10 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
     def _get_seq_model(self, result_tuple):
         category,word,tokens,sentence,_old_word = result_tuple
 
+        # if word is non english token then return None
+        if not self.english_filter.filter(word):
+            return (None,None,None)
+
         # if using test instance
         if category is None and word is None:
             if self.k_param==KPARAM:
@@ -235,6 +244,11 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
         if not category is None:
             category = category.strip()
+
+        # get the lexicalized features
+        lex_features, lex_category, lex_word = self.lex_fe._get_lexicalize_features(result_tuple)
+        # update the feature dict
+        feature_dict.update(lex_features)
 
         return (feature_dict,category,word)
 
