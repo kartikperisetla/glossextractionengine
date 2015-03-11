@@ -27,7 +27,8 @@ class MaltParsedFeatureExtractionFlowMapper:
             else:
                 feature_dict,category,word = result
                 print word,"\t",feature_dict,"\t",line
-        except:
+        except Exception as ex:
+            print >>sys.stderr,ex.message
             pass
 
 

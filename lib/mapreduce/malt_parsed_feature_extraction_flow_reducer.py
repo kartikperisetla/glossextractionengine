@@ -31,11 +31,13 @@ class MaltParsedFeatureExtractionFlowReducer:
                 _inst_feature_dict = literal_eval(feature_dict)
                 result = self._instance.classify(_inst_feature_dict)
 
-                feature_category_tuple = (word, result, feature_dict, line)
-                print feature_category_tuple
+                # output only positive instances
+                if not "-" in result:
+                    feature_category_tuple = (word, result, feature_dict, line)
+                    print feature_category_tuple
             except Exception as ex:
+                print >>sys.stderr,ex.message
                 pass
-                # print ex.message
 
 
 if __name__ == '__main__':
