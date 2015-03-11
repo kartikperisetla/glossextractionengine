@@ -69,7 +69,13 @@ class ClassificationInterface:
 
         _cmd = "hadoop jar /home/hadoop/contrib/streaming/hadoop-streaming-1.0.3.jar -input /user/hadoop/classification_input -mapper '"+ self.classification_mapper
 
+
         if self.arg_obj.args.has_key("model"):
+            _item = self.arg_obj.args["model"]
+            if "/" in _item:
+                self.model_file = _item.split("/")[-1:][0]
+                self.model_file_full_path = _item
+
             _cmd = _cmd +" " +self.model_file
 
         if self.arg_obj.args.has_key("cl_mapper_params"):
@@ -83,7 +89,7 @@ class ClassificationInterface:
         if self.arg_obj.args.has_key("cl_reducer_params"):
             _cmd = _cmd + " " + self.reducer_param
 
-        _cmd = _cmd + "' -file "+ self.classification_reducer + " -file glossextractionengine.mod -output /user/hadoop/classification_output -file " + self.model_file + " -jobconf mapred.job.name='GlossExtractionEngine:Classification'"
+        _cmd = _cmd + "' -file "+ self.classification_reducer + " -file glossextractionengine.mod -output /user/hadoop/classification_output -file " + self.model_file_full_path + " -jobconf mapred.job.name='GlossExtractionEngine:Classification'"
 
         print _cmd
         os.system(_cmd)
