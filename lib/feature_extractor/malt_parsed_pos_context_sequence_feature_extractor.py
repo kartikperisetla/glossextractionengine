@@ -107,7 +107,7 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             key="prime_feature"
             val=""
             if start_index==index:
-                for i in range(index,index+self.prime_feature_length+1):
+                for i in range(index,index+self.prime_feature_length):
                     wrd,p_tg=pos_tags[i]
                     val=val+p_tg+" "
             elif end_index-1==index:
