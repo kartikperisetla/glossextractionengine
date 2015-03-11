@@ -95,7 +95,6 @@ class FeatureExtractionInterface:
         # use parameters for reducer job if they are provided
         if not self.reducer_param is None:
             _cmd = _cmd +" "+ self.reducer_param
-
         _cmd = _cmd + "' -file "+ self.feature_extraction_reducer +" -file glossextractionengine.mod -output /user/hadoop/feature_extraction_output -jobconf mapred.job.name='GlossExtractionEngine:FeatureExtraction'"
 
         os.system(_cmd)
