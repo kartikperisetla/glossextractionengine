@@ -22,12 +22,12 @@ class MaltParsedFeatureExtractionFlowReducer:
 
     def process(self, line):
         if line.strip()!="":
-            # if line.count("\t")>=2:
-            _collection = line.split("\t")
-            word = _collection[0]
-            feature_dict = _collection[1]
-            line = _collection[2]
             try:
+                # if line.count("\t")>=2:
+                _collection = line.split("\t")
+                word = _collection[0]
+                feature_dict = _collection[1]
+                line = _collection[2]
                 _inst_feature_dict = literal_eval(feature_dict)
                 result = self._instance.classify(_inst_feature_dict)
 
