@@ -21,12 +21,15 @@ class MaltParsedFeatureExtractionFlowMapper:
             if isinstance(result, list):
                 for _item in result:
                     feature_dict,category,word = _item
+
                     # if not category is None and not word is None:
                         # not printing category as it will be always None for Test dataset
-                    print word,"\t",feature_dict,"\t",line
+                    if not feature_dict is None:
+                        print word,"\t",feature_dict,"\t",line
             else:
                 feature_dict,category,word = result
-                print word,"\t",feature_dict,"\t",line
+                if not feature_dict is None:
+                    print word,"\t",feature_dict,"\t",line
         except Exception as ex:
             print >>sys.stderr,ex.message
             pass
