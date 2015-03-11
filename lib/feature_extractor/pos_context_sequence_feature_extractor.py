@@ -5,6 +5,7 @@ sys.path.insert(0, 'glossextractionengine.mod')
 
 from lib.feature_extractor.base_feature_extractor import BaseFeatureExtractor
 from lib.feature_extractor.sentence_tokens_feature_extractor import SentenceTokensFeatureExtractor
+from lib.filter.english_token_filter import EnglishTokenFilter
 
 import re,nltk
 
@@ -25,6 +26,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         self.add_prime_feature = add_prime_feature
         self.debugFlag = 0 # off by default
 
+        self.english_filter = EnglishTokenFilter()
         pass
 
     def debug(self,s):
@@ -142,6 +144,10 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             return (None,None,None)
 
         category,word,tokens,sentence,_old_word = result_tuple
+
+        # if word is non english token then return None
+        if not self.english_filter.filter(word):
+            return (None,None,None)
 
         # if using test instance
         if category is None and word is None:
