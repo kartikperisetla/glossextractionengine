@@ -4,25 +4,38 @@ import sys
 sys.path.insert(0, 'glossextractionengine.mod')
 
 from lib.feature_extractor.base_feature_extractor import BaseFeatureExtractor
-from lib.feature_extractor.sentence_tokens_feature_extractor import SentenceTokensFeatureExtractor
+from lib.feature_extractor.malt_parsed_sentence_feature_extractor import MaltParsedSentenceFeatureExtractor
 
 import re,nltk
 
 __author__ = 'kartik'
 
 # class that extracts contextual features based on Part of speech tags around the word of interest
-class LexicalizedNgramsFeatureExtractor(BaseFeatureExtractor):
+class MaltParsedLexicalizedNgramsFeatureExtractor(BaseFeatureExtractor):
     def __init__(self, n=2):
         self.n_value =n
         self.feature_dict ={}
         pass
 
     def extract_features(self, instance):
-        _sentence_feature_extractor = SentenceTokensFeatureExtractor()
+        _sentence_feature_extractor = MaltParsedSentenceFeatureExtractor()
         result_tuple = _sentence_feature_extractor.extract_features(instance)
         # malformed instance
         if result_tuple is None:
             return (None,None,None)
+
+        # depending on if result_tuple is list or single tuple, take action
+        if isinstance(result_tuple,list):
+            result_list = []
+            for _item in result_tuple:
+                result_item = self._get_lexicalize_features(_item)
+                result_list.append(result_item)
+            return result_list
+        else:
+            result = self._get_lexicalize_features(result_tuple)
+            return result
+
+    def _get_lexicalize_features(self, result_tuple):
 
         category,word,tokens,sentence,_old_word = result_tuple
         num_of_tokens = len(tokens)
@@ -35,7 +48,7 @@ class LexicalizedNgramsFeatureExtractor(BaseFeatureExtractor):
             # head NP is first word in sentence
             if index==0:
                 start = index+1
-                end = start +self.n_value+1
+                end = index +self.n_value+1
                 n_grams = tokens[start:end]
                 result = ' '.join(n_grams)
 
