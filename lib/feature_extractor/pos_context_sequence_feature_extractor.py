@@ -190,7 +190,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                     start_index,end_index = self.getIndicesFirstHalf(index,num_of_tokens)
                     self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
 
-# word lies in second half of the sentence
+                # word lies in second half of the sentence
                 if index>num_of_tokens/2:
                     start_index,end_index = self.getIndicesSecondHalf(index, num_of_tokens)
                     self.debug("lies in second half")

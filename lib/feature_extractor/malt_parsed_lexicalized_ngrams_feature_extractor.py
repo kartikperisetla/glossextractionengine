@@ -35,7 +35,7 @@ class LexicalizedNgramsFeatureExtractor(BaseFeatureExtractor):
             # head NP is first word in sentence
             if index==0:
                 start = index+1
-                end = index +self.n_value+1
+                end = start +self.n_value+1
                 n_grams = tokens[start:end]
                 result = ' '.join(n_grams)
 
