@@ -73,11 +73,14 @@ class BaseModeler(object):
     def save_informative_features(self, location):
         # if modeler has valid classifier
         if not self.entity is None:
-            _result = self.entity.most_informative_features()
-            _path = location + "/" + self.model_saved_name+"_informative_features"
-            _fobj = open(_path,"wb")
-            pickle.dump(_result, _fobj)
-            _fobj.close()
+            print '*'*100
+            print "Most Informative Features:\n"
+            _result = self.entity.show_most_informative_features()
+            print '*'*100
+            # _path = location + "/" + self.model_saved_name+"_informative_features"
+            # _fobj = open(_path,"wb")
+            # pickle.dump(_result, _fobj)
+            # _fobj.close()
 
     # method to load the model from pickle file
     # it updates the self.entity attribute once it loads the model from pickle file
