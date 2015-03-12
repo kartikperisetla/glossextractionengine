@@ -122,8 +122,10 @@ class FeatureExtractionInterface:
     # method to perform sequence of operations before launching a map-reduce job for feature extraction
     def launch(self):
         self.check_params()
-        # interact with sampling interface for sampling
-        self.invoke_sampling()
+        if self.arg_obj.args.has_key("sampler"):
+            # interact with sampling interface for sampling
+            self.invoke_sampling()
+
         self.remove_dataset_dir_on_hdfs()
         self.remove_output_dir_on_hdfs()
         self.load_data_set_on_hdfs()
