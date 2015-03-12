@@ -71,7 +71,7 @@ class InterfaceWrapper:
     def run_feature_extraction(self):
         # launch feature extraction here
         _cmd = "python "+_prefix+"/"+"feature_extraction_interface.py " + self.arg_obj.get_string()
-        print "cmd: ",_cmd
+        print "run: Invoking Feature Extraction:\n",_cmd
         self.invoke(_cmd)
         pass
 
