@@ -35,7 +35,9 @@ class InterfaceWrapper:
     def run(self):
         # print sys.argv
         self.arg_obj.parse(sys.argv)
-        print self.arg_obj.args
+        print '*'*100
+        print "Run got arguments:",self.arg_obj.args
+        print '*'*100
 
         if not self.arg_obj.args.has_key("operation"):
             self.show_help()
@@ -59,7 +61,9 @@ class InterfaceWrapper:
     def run_sampling(self):
         # launch sampling
         _cmd = "python "+_prefix+"/"+"sampler_interface.py " + self.arg_obj.get_string()
-        print "cmd: ",_cmd
+        print '*'*100
+        print "run: Invoking Sampling:\n",_cmd
+        print '*'*100
         self.invoke(_cmd)
         pass
 
@@ -75,7 +79,9 @@ class InterfaceWrapper:
     def run_modeling(self):
         # launch modeling
         _cmd = "python "+_prefix+"/"+"modeler_interface.py " + self.arg_obj.get_string()
-        print "cmd: ",_cmd
+        print '*'*100
+        print "run: Invoking Modeling:\n",_cmd
+        print '*'*100
         self.invoke(_cmd)
         pass
 
@@ -83,7 +89,9 @@ class InterfaceWrapper:
     def run_classification(self):
         # launch classification
         _cmd = "python "+_prefix+"/"+"classification_interface.py " + self.arg_obj.get_string()
-        print "cmd: ",_cmd
+        print '*'*100
+        print "run: Invoking Classification:\n",_cmd
+        print '*'*100
         self.invoke(_cmd)
         pass
 
