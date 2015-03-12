@@ -92,7 +92,7 @@ class InterfaceWrapper:
     def check_params(self):
         # this checks for all params required to execute the default flow of the framework
         # mapper and reducer params might be optional- thus they are not required
-        if not self.arg_obj.args.has_key("fe_mapper") or not self.arg_obj.args.has_key("fe_reducer") or not self.arg_obj.args.has_key("train_dataset") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("test_size") or not self.arg_obj.args.has_key("sampler") or not self.arg_obj.args.has_key("cl_mapper") or not self.arg_obj.args.has_key("cl_reducer") :
+        if not self.arg_obj.args.has_key("fe_mapper") or not self.arg_obj.args.has_key("fe_reducer") or not self.arg_obj.args.has_key("train_dataset") or not self.arg_obj.args.has_key("train_size") or not self.arg_obj.args.has_key("test_size") or not self.arg_obj.args.has_key("cl_mapper") or not self.arg_obj.args.has_key("cl_reducer") :
             self.show_help()
 
     # method to run default behavior- here framework handles everything- sampling, feature extraction, modeling
