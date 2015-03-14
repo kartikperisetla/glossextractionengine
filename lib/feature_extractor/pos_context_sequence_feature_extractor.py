@@ -102,12 +102,33 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         self.debug(pos_tags)
 
         feature_dict = {}
-        for i in range(start_index, end_index):
-            key ="W"+str(i)
-            wrd,p_tg = pos_tags[i]
+
+        # add feature for tokens from index to start_index
+        token_i = 1
+        if start_index!=index:
+            for lower in range(index-1,start_index,-1):
+                key = "W-"+str(token_i)
+                wrd,p_tg = pos_tags[lower]
+                val = p_tg
+                feature_dict[key] = val
+                token_i = token_i + 1
+
+        # add feature for token at index
+        key = "W0"
+        wrd,p_tg = pos_tags[index]
+        val = p_tg
+        feature_dict[key] = val
+
+        # add feature for tokens from index to end index
+        token_i = 1
+        for upper in range(index+1, end_index):
+            key = "W+"+str(token_i)
+            wrd,p_tg = pos_tags[upper]
             val = p_tg
             feature_dict[key] = val
+            token_i = token_i + 1
 
+        # adding the prime feature if the add_prime_featue flag is set to True
         if self.add_prime_feature:
             self.debug("got features, looking for prime_feature")
             key="prime_feature"
@@ -214,7 +235,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                 feature_dict = self.getSequenceModelForIndexRange(result_tuple,index,start_index, end_index)
 
                 # update feature for multiword NP
-                feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
+                # feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
 
         else:	# sentence doesn't contains the head NP
             self.debug("word not in line")
