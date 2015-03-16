@@ -24,6 +24,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         self.k_param = k_param
         self.prime_feature_length = prime_feature_length
         self.add_prime_feature = add_prime_feature
+        print>>sys.stderr," add_prime_feature:",self.add_prime_feature
         self.debugFlag = 0 # off by default
 
         self.english_filter = EnglishTokenFilter()
@@ -103,30 +104,30 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
         feature_dict = {}
 
-        # add feature for tokens from index to start_index
-        token_i = 1
-        if start_index!=index:
-            for lower in range(index-1,start_index,-1):
-                key = "W-"+str(token_i)
-                wrd,p_tg = pos_tags[lower]
-                val = p_tg
-                feature_dict[key] = val
-                token_i = token_i + 1
-
-        # add feature for token at index
-        key = "W0"
-        wrd,p_tg = pos_tags[index]
-        val = p_tg
-        feature_dict[key] = val
-
-        # add feature for tokens from index to end index
-        token_i = 1
-        for upper in range(index+1, end_index):
-            key = "W+"+str(token_i)
-            wrd,p_tg = pos_tags[upper]
-            val = p_tg
-            feature_dict[key] = val
-            token_i = token_i + 1
+        # # add feature for tokens from index to start_index
+        # token_i = 1
+        # if start_index!=index:
+        #     for lower in range(index-1,start_index,-1):
+        #         key = "W-"+str(token_i)
+        #         wrd,p_tg = pos_tags[lower]
+        #         val = p_tg
+        #         feature_dict[key] = val
+        #         token_i = token_i + 1
+        #
+        # # add feature for token at index
+        # key = "W0"
+        # wrd,p_tg = pos_tags[index]
+        # val = p_tg
+        # feature_dict[key] = val
+        #
+        # # add feature for tokens from index to end index
+        # token_i = 1
+        # for upper in range(index+1, end_index):
+        #     key = "W+"+str(token_i)
+        #     wrd,p_tg = pos_tags[upper]
+        #     val = p_tg
+        #     feature_dict[key] = val
+        #     token_i = token_i + 1
 
         # adding the prime feature if the add_prime_featue flag is set to True
         if self.add_prime_feature:
@@ -151,6 +152,22 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                     wrd,p_tg=pos_tags[i]
                     val=val+p_tg+" "
             feature_dict[key]=val[:-1]
+
+            # adding prime feature for beginning and ending of the sentence as well
+            # for beginning
+            beg_pattern = " "
+            for k in range(0, self.prime_feature_length):
+                wrd,p_tg=pos_tags[k]
+                beg_pattern = beg_pattern + p_tg+" "
+
+            feature_dict["beg_prime"] = beg_pattern
+
+            # for ending
+            end_pattern = " "
+            for k in range(len(pos_tags)-self.prime_feature_length, len(pos_tags)):
+                wrd,p_tg=pos_tags[k]
+                end_pattern = end_pattern + p_tg+" "
+            feature_dict["end_prime"] = end_pattern
 
         return feature_dict
 
