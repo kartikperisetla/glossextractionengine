@@ -7,8 +7,8 @@ sys.path.insert(0, 'glossextractionengine.mod')
 
 class FeatureExtractionFlowReducer:
     def process(self, line):
-        if line.strip()!="":
-            if line.count("\t")==2:
+        try:
+            if line.strip()!="":
                 _collection = line.split("\t")
                 word = _collection[0]
                 category = _collection[1]
@@ -16,6 +16,8 @@ class FeatureExtractionFlowReducer:
 
                 feature_category_tuple = (feature_dict,category.strip())
                 print feature_category_tuple
+        except Exception as ex:
+            print>>sys.stderr, ex.message,"\n for :",line
 
 
 if __name__ == '__main__':
