@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys
+import sys,ast
 import re
 import cStringIO
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     params = _args.split("#")
     _context_window_size = int(params[0])
     _prime_feature_length = int(params[1])
-    _add_prime_feature = bool(params[2])
+    _add_prime_feature = ast.literal_eval(params[2].strip())
 
     _instance = MaltParsedFeatureExtractionFlowMapper(context_window_size=_context_window_size, prime_feature_length=_prime_feature_length, add_prime_feature=_add_prime_feature)
 
