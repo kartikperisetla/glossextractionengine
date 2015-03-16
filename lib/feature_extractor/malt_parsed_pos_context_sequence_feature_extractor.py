@@ -69,6 +69,11 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         self.debug("index got in getIndicesFirstHalf:"+str(index))
 
         self.debug("k_param:"+str(self.k_param))
+        if num_of_tokens<self.k_param:
+            start_index = 0
+            end_index = num_of_tokens - 1
+            return (start_index,end_index)
+
         while( (num_of_tokens)-index)< self.k_param:
             index = index -1
         start_index = index
@@ -77,6 +82,11 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     # method that gives start and end index of tokens to be considered for sequence model if NP lies in second half of the sentence
     def getIndicesSecondHalf(self,index,num_of_tokens):
+        if num_of_tokens<self.k_param:
+            start_index = 0
+            end_index = num_of_tokens - 1
+            return (start_index,end_index)
+
         while(index)< self.k_param:
             index = index +1
         start_index = index-self.k_param+1
@@ -85,6 +95,11 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     # method that gives start and end index of tokens to be considered for sequence model if NP lies at middle of the sentence
     def getIndicesForMiddleWord(self,index,num_of_tokens):
+        if num_of_tokens<self.k_param:
+            start_index = 0
+            end_index = num_of_tokens - 1
+            return (start_index,end_index)
+
         if self.k_param % 2==0:
             start_index = index -(self.k_param/2)
             end_index = index + (self.k_param/2)
@@ -220,70 +235,59 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         # if sentence contains the NP
         if word.lower() in sentence.lower():
             self.debug("word in sentence")
-            # print(sys.stderr,"word:",word," sentence:",sentence)
 
-            # print(sys.stderr,"word in sentence:going for getFullSentenceSequenceModel")
+            # if the word is not present as complete word in token list 'tokens'
+            if tokens.count(word)==0:
+                # iterate over tokens
+                for token_index,token in enumerate(tokens):
+                    # check if word is part of any token
+                    if word in token:
+                        index=token_index
+                        # print(sys.stderr,"containing word found at index :",str(index))
 
-            # tokens in sentence is less or equal to k param
-            if len(tokens)<=self.k_param:
-                feature_dict = self.getFullSentenceSequenceModel(result_tuple)
+                        break	# found the token containing this word
             else:
-                # if the word is not present as complete word in token list 'tokens'
-                if tokens.count(word)==0:
-                    # iterate over tokens
-                    for token_index,token in enumerate(tokens):
-                        # check if word is part of any token
-                        if word in token:
-                            index=token_index
-                            # print(sys.stderr,"containing word found at index :",str(index))
-
-                            break	# found the token containing this word
-                else:
-                    # pick the first index of 'word' in token list 'tokens'
-                    index = tokens.index(word)	# tokens.index(word)
-                    # print(sys.stderr,"exact word found at index :",str(index))
+                # pick the first index of 'word' in token list 'tokens'
+                index = tokens.index(word)	# tokens.index(word)
+                # print(sys.stderr,"exact word found at index :",str(index))
 
 
-                # word lies in first half of the sentence
-                if index<num_of_tokens/2:
-                    self.debug("lies in lower half")
-                    # print(sys.stderr,"word lies in lower half:going for getIndicesFirstHalf")
-                    start_index,end_index = self.getIndicesFirstHalf(index,num_of_tokens)
-                    self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
+            # word lies in first half of the sentence
+            if index<num_of_tokens/2:
+                self.debug("lies in lower half")
+                # print(sys.stderr,"word lies in lower half:going for getIndicesFirstHalf")
+                start_index,end_index = self.getIndicesFirstHalf(index,num_of_tokens)
+                self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
 
 # word lies in second half of the sentence
-                if index>num_of_tokens/2:
-                    start_index,end_index = self.getIndicesSecondHalf(index, num_of_tokens)
-                    self.debug("lies in second half")
-                    # print(sys.stderr,"word lies in second half:going for getIndicesSecondHalf")
-                    self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
+            if index>num_of_tokens/2:
+                start_index,end_index = self.getIndicesSecondHalf(index, num_of_tokens)
+                self.debug("lies in second half")
+                # print(sys.stderr,"word lies in second half:going for getIndicesSecondHalf")
+                self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
 
-                # word lies in middle of the sentence
-                if index == num_of_tokens/2:
-                    start_index,end_index = self.getIndicesForMiddleWord(index,num_of_tokens)
-                    self.debug("lies at the middle")
-                    # print(sys.stderr,"word lies in middle :going for getIndicesForMiddleWord")
-                    self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
+            # word lies in middle of the sentence
+            if index == num_of_tokens/2:
+                start_index,end_index = self.getIndicesForMiddleWord(index,num_of_tokens)
+                self.debug("lies at the middle")
+                # print(sys.stderr,"word lies in middle :going for getIndicesForMiddleWord")
+                self.debug("start_index:"+str(start_index)+" end_index:"+str(end_index))
 
-                # get sequence model for tokens in give index range
-                feature_dict = self.getSequenceModelForIndexRange(result_tuple,index,start_index, end_index)
+            # get sequence model for tokens in give index range
+            feature_dict = self.getSequenceModelForIndexRange(result_tuple,index,start_index, end_index)
 
-                # update feature for multi-word NP
-                # feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
+            # update feature for multi-word NP
+            # feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
 
         else:	# sentence doesn't contains the head NP
-            self.debug("word not in line")
-            if self.k_param==KPARAM:
-                feature_dict = self.getFullSentenceSequenceModel(result_tuple)
-            else:
-                feature_dict = self.getKSequenceModel(result_tuple)
+            pass
 
 
         if not category is None:
             category = category.strip()
 
         # get the lexicalized features
-        lex_features, lex_category, lex_word = self.lex_fe._get_lexicalize_features(result_tuple)
+        # lex_features, lex_category, lex_word = self.lex_fe._get_lexicalize_features(result_tuple)
         # update the feature dict
         # feature_dict.update(lex_features)
 
