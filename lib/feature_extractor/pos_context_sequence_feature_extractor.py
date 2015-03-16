@@ -221,14 +221,6 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             self.debug("word in sentence")
             print(sys.stderr,"word:",word," sentence:",sentence)
 
-            # print(sys.stderr,"word in sentence:going for getFullSentenceSequenceModel")
-
-            # tokens in sentence is less or equal to k param
-            # if len(tokens)<=self.k_param:
-            #     feature_dict = self.getFullSentenceSequenceModel(result_tuple)
-            # else:
-            # if the word is not present as complete word in token list 'tokens'
-            
             if tokens.count(word)==0:
                 # iterate over tokens
                 for token_index,token in enumerate(tokens):
@@ -271,12 +263,10 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             # update feature for multiword NP
             # feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
 
-        else:	# sentence doesn't contains the head NP
-            print>>sys.stderr,"word:",word," not in line:",instance
-            if self.k_param==KPARAM:
-                feature_dict = self.getFullSentenceSequenceModel(result_tuple)
-            else:
-                feature_dict = self.getKSequenceModel(result_tuple)
+        else:
+        	# sentence doesn't contains the head NP
+            # just ignore such setences
+            pass
 
         if not category is None:
             category = category.strip()
