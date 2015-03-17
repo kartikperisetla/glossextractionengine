@@ -150,11 +150,17 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             if start_index==index:
                 for i in range(index,index+self.prime_feature_length):
                     wrd,p_tg=pos_tags[i]
+                    # if curr token is head NP use HNP as pos tag
+                    if i==index:
+                        p_tg = "HNP"
                     val=val+p_tg+" "
             elif end_index-1==index:
                 self.debug("STR:"+str(index-self.prime_feature_length)+" END:"+str(index+1))
                 for i in range(index-self.prime_feature_length,index+1):
                     wrd,p_tg=pos_tags[i]
+                    # if curr token is head NP use HNP as pos tag
+                    if i==index:
+                        p_tg = "HNP"
                     val=val+p_tg+" "
             else:
                 while(end_index-start_index>=self.prime_feature_length):
@@ -163,6 +169,9 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                     self.debug("MIDDLE_start_index:"+str(start_index)+" end_index:"+str(end_index))
                 for i in range(start_index,end_index):
                     wrd,p_tg=pos_tags[i]
+                    # if curr token is head NP use HNP as pos tag
+                    if i==index:
+                        p_tg = "HNP"
                     val=val+p_tg+" "
             feature_dict[key]=val[:-1]
 
@@ -171,6 +180,9 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             beg_pattern = " "
             for k in range(0, self.prime_feature_length):
                 wrd,p_tg=pos_tags[k]
+                # if curr token is head NP use HNP as pos tag
+                if k==index:
+                    p_tg = "HNP"
                 beg_pattern = beg_pattern + p_tg+" "
 
             feature_dict["beg_prime"] = beg_pattern
@@ -179,6 +191,9 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             end_pattern = " "
             for k in range(len(pos_tags)-self.prime_feature_length, len(pos_tags)):
                 wrd,p_tg=pos_tags[k]
+                # if curr token is head NP use HNP as pos tag
+                if k==index:
+                    p_tg = "HNP"
                 end_pattern = end_pattern + p_tg+" "
             feature_dict["end_prime"] = end_pattern
 
