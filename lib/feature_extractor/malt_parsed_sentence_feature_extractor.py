@@ -56,14 +56,26 @@ class MaltParsedSentenceFeatureExtractor(BaseFeatureExtractor):
     def parseInstanceWithMultipleNN(self, tokens, word_pos_tuple_collection, instance):
         tuple_collection = []
 
-        for tpl in word_pos_tuple_collection:
-            wrd, tag = tpl
-            # if curr wrd is NNP/NN/NNS
-            if "NN" in tag:
-                                      # (<category>,<word>,<tokens>,<sentence>,<old_word: None for now>)
-                tuple_collection.append((None, wrd, tokens, instance,None))
+        # iterate over the word-pos-tuple collection
+        for i,item in enumerate(word_pos_tuple_collection):
+            # except for the last token in sentence
+            if i!=len(word_pos_tuple_collection)-1:
+                curr_word, curr_word_tag = item
+                next_word, next_word_tag = word_pos_tuple_collection[i+1]
 
-        # return the tuple collection
+                # if both noun tokens adjacent- merge them
+                if "NN" in curr_word_tag and "NN" in next_word_tag:
+                    merged_token = curr_word+"_"+next_word
+                    merged_token_tag = "NNP"
+
+                    # update the token list with new merged NNP token
+                    tokens[i] = merged_token
+                    del tokens[i+1]
+                    tuple_collection.append((None, merged_token, tokens, instance,None))
+                    i= i+1
+                elif "NN" in curr_word_tag:
+                    tuple_collection.append((None, wrd, tokens, instance,None))
+
         return tuple_collection
 
 
