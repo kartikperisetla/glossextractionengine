@@ -48,7 +48,7 @@ class MaltParsedFeatureExtractionFlowReducer:
 
                 # output only positive instances
                 if not "-" in result:
-                    feature_category_tuple = (word, result, feature_dict, line)
+                    feature_category_tuple = (word, result, feature_dict, line, pos_prob)
                     print feature_category_tuple
             except Exception as ex:
                 print >>sys.stderr,ex.message
