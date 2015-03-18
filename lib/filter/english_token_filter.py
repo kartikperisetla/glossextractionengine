@@ -8,7 +8,7 @@ import string
 class EnglishTokenFilter(BaseFilter):
     # method that returns True if sentence contains only english tokens
     def filter(self, sentence):
-        if set('[~!@#$%^&*()_+{}":;\']+$').intersection(sentence):
+        if set('[~!@#$%^&*()+{}":;\']+$').intersection(sentence):
             return False
         else:
             return True
