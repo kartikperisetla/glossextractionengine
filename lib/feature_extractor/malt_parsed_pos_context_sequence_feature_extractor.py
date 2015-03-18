@@ -247,9 +247,11 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         tokens_set = set(tokens)
         num_of_tokens = len(tokens)
 
+        print>>sys.stderr," checking word:",word.lower()," in sentence:",sentence.lower()
+
         # if sentence contains the NP
         if word.lower() in sentence.lower():
-            self.debug("word in sentence")
+            print>>sys.stderr,"word in sentence"
 
             # if the word is not present as complete word in token list 'tokens'
             if tokens.count(word)==0:
@@ -295,6 +297,7 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             # feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
 
         else:	# sentence doesn't contains the head NP
+            print>>sys.stderr," word:",word.lower()," not present in sentence:",sentence.lower()
             pass
 
 
@@ -306,7 +309,7 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         # update the feature dict
         # feature_dict.update(lex_features)
 
-        return (feature_dict,category,word)
+        return (feature_dict,category,word,sentence)
 
     # # method to place feature value for W0 as NP if its a multiword NP
     # def update_feature_dict(self, feature_dict, word, old_word`,index):
