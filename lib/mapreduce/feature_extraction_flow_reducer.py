@@ -9,14 +9,15 @@ class FeatureExtractionFlowReducer:
     def process(self, line):
         try:
             if line.strip()!="":
-                _collection = line.split("\t")
-                word = _collection[0]
-                category = _collection[1]
-                feature_dict = _collection[2]
-
-                feature_category_tuple = (feature_dict,category.strip())
-                print feature_category_tuple
+                if "\t" in line:
+                    _collection = line.split("\t")
+                    word = _collection[0]
+                    category = _collection[1]
+                    feature_dict = _collection[2]
+                    feature_category_tuple = (feature_dict,category.strip())
+                    print feature_category_tuple
         except Exception as ex:
+            pass
             print>>sys.stderr, ex.message,"\n for :",line
 
 
