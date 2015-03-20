@@ -150,7 +150,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             key="prime_feature"
             val=""
             if start_index==index:
-                for i in range(index,index+self.prime_feature_length):
+                for i in range(index,min(len(pos_tags),index+self.prime_feature_length)):
                     wrd,p_tg=pos_tags[i]
                     # if curr token is head NP use HNP as pos tag
                     if i==index:
@@ -158,7 +158,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                     val=val+p_tg+" "
             elif end_index-1==index:
                 self.debug("STR:"+str(index-self.prime_feature_length)+" END:"+str(index+1))
-                for i in range(index-self.prime_feature_length,index+1):
+                for i in range(max(0,index-self.prime_feature_length),index+1):
                     wrd,p_tg=pos_tags[i]
                     # if curr token is head NP use HNP as pos tag
                     if i==index:
@@ -175,7 +175,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                     if i==index:
                         p_tg = "HNP"
                     val=val+p_tg+" "
-            feature_dict[key]=val[:-1]
+            feature_dict[key]=val.strip()
 
             # adding prime feature for beginning and ending of the sentence as well
             # for beginning
@@ -187,7 +187,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                     p_tg = "HNP"
                 beg_pattern = beg_pattern + p_tg+" "
 
-            feature_dict["beg_prime"] = beg_pattern
+            feature_dict["beg_prime"] = beg_pattern.strip()
 
             # for ending
             end_pattern = " "
@@ -196,7 +196,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                 if k==index:
                     p_tg = "HNP"
                 end_pattern = end_pattern + p_tg+" "
-            feature_dict["end_prime"] = end_pattern
+            feature_dict["end_prime"] = end_pattern.strip()
 
         return feature_dict
 
@@ -285,7 +285,9 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         if not category is None:
             category = category.strip()
 
-        return (feature_dict,category,word,sentence)
+        tpl = (feature_dict,category,word,sentence)
+        print>>sys.stderr," pos_context_seq_fe returning :",tpl
+        return tpl
 
     # method to place feature value for W0 as NP if its a multiword NP
     def update_feature_dict(self, feature_dict, word, old_word,index):
