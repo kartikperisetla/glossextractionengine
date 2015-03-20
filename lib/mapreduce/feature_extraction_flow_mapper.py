@@ -6,6 +6,7 @@ import cStringIO
 sys.path.insert(0, 'glossextractionengine.mod')
 
 from lib.feature_extractor.pos_context_sequence_feature_extractor import POSContextSequenceFeatureExtractor
+from lib.feature_extractor.length_feature_extractor import LengthFeatureExtractor
 from lib.mapreduce.base_flow_component import BaseFlowComponent
 
 # mapper side - class that acts as proxy for feature extractor
@@ -20,6 +21,11 @@ class FeatureExtractionFlowMapper(BaseFlowComponent):
         pos_context_seq_feature_extractor = POSContextSequenceFeatureExtractor(k_param=context_window_size,prime_feature_length=prime_feature_length, add_prime_feature=add_prime_feature_val)
         # register the feature extractor to this flow component
         self.register_feature_extractor(pos_context_seq_feature_extractor)
+
+        # instantiate a length feature extractor
+        length_feature_extractor = LengthFeatureExtractor()
+        # register the feature extractor to this flow component
+        self.register_feature_extractor(length_feature_extractor)
 
         # instantiate any other feature extractor and register it with flow components to start using it in the flow
 
