@@ -7,6 +7,7 @@ import cStringIO
 sys.path.insert(0, 'glossextractionengine.mod')
 
 from lib.feature_extractor.malt_parsed_pos_context_sequence_feature_extractor import MaltParsedPOSContextSequenceFeatureExtractor
+from lib.feature_extractor.malt_parsed_length_feature_extractor import MaltParsedLengthFeatureExtractor
 from lib.mapreduce.base_flow_component import BaseFlowComponent
 
 # mapper side - class that acts as proxy for feature extractor for malt parsed sentences
@@ -18,6 +19,11 @@ class MaltParsedFeatureExtractionFlowMapper(BaseFlowComponent):
         # k_param: pass 4 tokens as context window length:
         malt_pos_context_seq_feature_extractor = MaltParsedPOSContextSequenceFeatureExtractor(k_param=context_window_size,prime_feature_length=prime_feature_length, add_prime_feature=add_prime_feature)
         self.register_feature_extractor(malt_pos_context_seq_feature_extractor)
+
+        # instantiate a length feature extractor
+        length_feature_extractor = MaltParsedLengthFeatureExtractor()
+        # register the feature extractor to this flow component
+        self.register_feature_extractor(length_feature_extractor)
 
     def process(self, line):
         try:
