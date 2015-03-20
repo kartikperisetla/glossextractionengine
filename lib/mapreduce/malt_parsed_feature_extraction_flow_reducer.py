@@ -24,32 +24,32 @@ class MaltParsedFeatureExtractionFlowReducer:
     def process(self, line):
         if line.strip()!="":
             try:
-                # if line.count("\t")>=2:
-                _collection = line.split("\t")
-                word = _collection[0]
-                feature_dict = _collection[1]
-                line = _collection[2]
-                _inst_feature_dict = literal_eval(feature_dict)
-                # result = self._instance.classify(_inst_feature_dict)
+                if line.count("\t")>=1:
+                    _collection = line.split("\t")
+                    word = _collection[0]
+                    feature_dict = _collection[1]
+                    line = _collection[2]
+                    _inst_feature_dict = literal_eval(feature_dict)
+                    # result = self._instance.classify(_inst_feature_dict)
 
-                # prob classify approach
-                prob_dist = self._instance.entity.prob_classify(_inst_feature_dict)
+                    # prob classify approach
+                    prob_dist = self._instance.entity.prob_classify(_inst_feature_dict)
 
-                pos_prob = prob_dist.prob('1')
-                neg_prob = prob_dist.prob('-1')
-                print>>sys.stderr, " pos_prob:",pos_prob
-                print>>sys.stderr, " neg_prob:",neg_prob
+                    pos_prob = prob_dist.prob('1')
+                    neg_prob = prob_dist.prob('-1')
+                    print>>sys.stderr, " pos_prob:",pos_prob
+                    print>>sys.stderr, " neg_prob:",neg_prob
 
-                if float(pos_prob)*100 >= float(self.threshold):
-                    result = "1"
-                else:
-                    result = "-1"
+                    if float(pos_prob)*100 >= float(self.threshold):
+                        result = "1"
+                    else:
+                        result = "-1"
 
 
-                # output only positive instances
-                if not "-" in result:
-                    feature_category_tuple = (word, result, feature_dict, line, pos_prob)
-                    print feature_category_tuple
+                    # output only positive instances
+                    if not "-" in result:
+                        feature_category_tuple = (word, result, feature_dict, line, pos_prob)
+                        print feature_category_tuple
             except Exception as ex:
                 print >>sys.stderr,ex.message
                 pass
