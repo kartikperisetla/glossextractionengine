@@ -29,6 +29,7 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     def debug(self,s):
         if self.debugFlag==1:
+            pass
             print s
 
     # method that generates sequence model considering all words in the sentence
@@ -144,6 +145,7 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
         # adding the prime feature if the add_prime_featue flag is set to True
         if self.add_prime_feature:
+            print>>sys.stderr," pos_tags:",pos_tags
             self.debug("got features, looking for prime_feature")
             key="prime_feature"
             val=""
@@ -174,11 +176,13 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                         p_tg = "HNP"
                     val=val+p_tg+" "
             feature_dict[key]=val[:-1]
+            print>>sys.stderr," start_index:",start_index, " end_index:",end_index
 
+            print>>sys.stderr," feature_dict so far: ",feature_dict
             # adding prime feature for beginning and ending of the sentence as well
             # for beginning
             beg_pattern = " "
-            for k in range(0, self.prime_feature_length):
+            for k in range(0, min(self.prime_feature_length,len(pos_tags))):
                 wrd,p_tg=pos_tags[k]
                 # if curr token is head NP use HNP as pos tag
                 if k==index:
@@ -189,7 +193,7 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
             # for ending
             end_pattern = " "
-            for k in range(len(pos_tags)-self.prime_feature_length, len(pos_tags)):
+            for k in range(max(0,len(pos_tags)-self.prime_feature_length), len(pos_tags)):
                 wrd,p_tg=pos_tags[k]
                 # if curr token is head NP use HNP as pos tag
                 if k==index:
@@ -201,7 +205,7 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     # method that takes instance as input and returns feature vector and optional category label
     # params: instance of format- <category> '<instance_name> | <instance>
-    # returns: a tuple of (<feature_dict>, <category>, <word>) or a list of such tuples
+    # returns: a tuple of (<feature_dict>, <category>, <word>, <sentence>) or a list of such tuples
     def extract_features(self, instance):
         _sentence_feature_extractor = MaltParsedSentenceFeatureExtractor()
         result_tuple = _sentence_feature_extractor.extract_features(instance)
@@ -227,12 +231,14 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             result = self._get_seq_model(result_tuple)
             return result
 
+    # method to get the sequence model for malt parsed version of instance
+    # returns a tuple: (feature_dict,category,word,sentence)
     def _get_seq_model(self, result_tuple):
         category,word,tokens,sentence,_old_word = result_tuple
 
         # if word is non english token then return None
         if not self.english_filter.filter(word):
-            return (None,None,None)
+            return (None,None,None, None)
 
         # if using test instance
         if category is None and word is None:
@@ -241,17 +247,17 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             else:
                 feature_dict = self.getKSequenceModel(result_tuple)
 
-            return (feature_dict,None, None)
+            return (feature_dict,None, None, None)
 
 
         tokens_set = set(tokens)
         num_of_tokens = len(tokens)
 
-        print>>sys.stderr," checking word:",word.lower()," in sentence:",sentence.lower()
+        # print>>sys.stderr," checking word:",word.lower()," in sentence:",sentence.lower()
 
         # if sentence contains the NP
         if word.lower() in sentence.lower():
-            print>>sys.stderr,"word in sentence"
+            # print>>sys.stderr,"word in sentence"
 
             # if the word is not present as complete word in token list 'tokens'
             if tokens.count(word)==0:
@@ -297,7 +303,7 @@ class MaltParsedPOSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             # feature_dict = self.update_feature_dict(feature_dict,word,_old_word,index)
 
         else:	# sentence doesn't contains the head NP
-            print>>sys.stderr," word:",word.lower()," not present in sentence:",sentence.lower()
+            # print>>sys.stderr," word:",word.lower()," not present in sentence:",sentence.lower()
             pass
 
 
