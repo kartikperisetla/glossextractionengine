@@ -22,14 +22,19 @@ class LengthFeatureExtractor(BaseFeatureExtractor):
             _sentence_feature_extractor = SentenceTokensFeatureExtractor()
             result_tuple = _sentence_feature_extractor.extract_features(instance)
             category,word,tokens,sentence,_old_word = result_tuple
-
+            
             if not instance is None:
-                tokens = nltk.word_tokenize(instance)
+                if "|" in sentence:
+                    norm_sentence = sentence.split("|")[1]
+                else:
+                    norm_sentence = sentence
+
+                tokens = nltk.word_tokenize(norm_sentence)
                 length = len(tokens)
                 feat_dict ={}
                 feat_dict["instance_length"]=length
 
-                return (feat_dict,None,word,instance)
+                return (feat_dict,None,word,sentence)
         except Exception as ex:
-            pass
+            print>>sys.stderr,ex.message
         return (None,None,None,None)
