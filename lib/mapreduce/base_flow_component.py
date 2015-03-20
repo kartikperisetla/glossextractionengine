@@ -31,12 +31,11 @@ class BaseFlowComponent(object):
 
         for fe_object in self.feature_extractor_collection:
             # feat_dict,cat,wrd = fe_object.extract_features(instance)
-            print>>sys.stderr," using FE currently:",fe_object
+
             _tuple_instance_collection = fe_object.extract_features(instance)
-            # print>>sys.stderr,"BaseFlowComponent got _tuple_instance_collection:",_tuple_instance_collection
+
             if isinstance(_tuple_instance_collection,list):
                 for _tuple_instance in _tuple_instance_collection:
-                    # print>>sys.stderr,"BaseFlowComponent got _tuple_instance:", _tuple_instance
                     self.update_tuple(_tuple_instance)
             else:
                 self.update_tuple(_tuple_instance_collection)
