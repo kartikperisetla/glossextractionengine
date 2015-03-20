@@ -62,18 +62,18 @@ class MaltParsedSentenceFeatureExtractor(BaseFeatureExtractor):
             if i!=len(word_pos_tuple_collection)-1:
                 curr_word, curr_word_tag = item
                 next_word, next_word_tag = word_pos_tuple_collection[i+1]
-                print>>sys.stderr," curr_word:",curr_word," curr_word_tag:",curr_word_tag," next_word:",next_word," next_word_tag:",next_word_tag
+                # print>>sys.stderr," curr_word:",curr_word," curr_word_tag:",curr_word_tag," next_word:",next_word," next_word_tag:",next_word_tag
                 # if both noun tokens adjacent- merge them
                 if "NN" in curr_word_tag and "NN" in next_word_tag:
                     merged_token = curr_word+"_"+next_word
                     merged_token_tag = "NNP"
-                    print>>sys.stderr," merged_token:",merged_token," merged_token_tag:",merged_token_tag
+                    # print>>sys.stderr," merged_token:",merged_token," merged_token_tag:",merged_token_tag
 
                     # update the token list with new merged NNP token
                     copy_of_tokens = list(tokens)
                     copy_of_tokens[i] = merged_token
                     del copy_of_tokens[i+1]
-                    print>>sys.stderr," updated tokens :",copy_of_tokens
+                    # print>>sys.stderr," updated tokens :",copy_of_tokens
                     to_be_replace = curr_word+"/"+curr_word_tag+" "+next_word+"/"+next_word_tag
                     replacing_token = curr_word+"_"+next_word+"/"+merged_token_tag
                     cp_of_instance = instance
@@ -81,8 +81,8 @@ class MaltParsedSentenceFeatureExtractor(BaseFeatureExtractor):
 
                     tuple_collection.append((None, merged_token, copy_of_tokens, cp_of_instance,None))
                     i= i+1
-                    print>>sys.stderr," tuple collection became:",tuple_collection
-                    print>>sys.stderr," cp_tokens:",copy_of_tokens," tokens:",tokens
+                    # print>>sys.stderr," tuple collection became:",tuple_collection
+                    # print>>sys.stderr," cp_tokens:",copy_of_tokens," tokens:",tokens
                 elif "NN" in curr_word_tag:
                     tuple_collection.append((None, curr_word, tokens, instance,None))
 
