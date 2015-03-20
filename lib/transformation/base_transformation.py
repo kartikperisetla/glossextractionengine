@@ -5,7 +5,7 @@ __author__ = 'kartik'
 class BaseTransformation:
     # constructor
     def __init__(self):
-        print "BaseTransformation:init"
+        pass
 
     # method that applies transformation on text
     def transform(self, *kargs):
