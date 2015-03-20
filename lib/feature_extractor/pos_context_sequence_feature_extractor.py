@@ -180,7 +180,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             # adding prime feature for beginning and ending of the sentence as well
             # for beginning
             beg_pattern = " "
-            for k in range(0, self.prime_feature_length):
+            for k in range(0, min(self.prime_feature_length,len(pos_tags))):
                 wrd,p_tg=pos_tags[k]
                 # if curr token is head NP use HNP as pos tag
                 if k==index:
@@ -191,7 +191,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
             # for ending
             end_pattern = " "
-            for k in range(len(pos_tags)-self.prime_feature_length, len(pos_tags)):
+            for k in range(max(0,len(pos_tags)-self.prime_feature_length), len(pos_tags)):
                 wrd,p_tg=pos_tags[k]
                 if k==index:
                     p_tg = "HNP"
@@ -202,19 +202,19 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
     # method that takes instance as input and returns feature vector and optional category label
     # params: instance of format- <category> '<instance_name> | <instance>
-    # returns: a tuple of (<feature_dict>, <category>, <word>) or a list of such tuples
+    # returns: a tuple of (<feature_dict>, <category>, <word>, <sentence>) or a list of such tuples
     def extract_features(self, instance):
         _sentence_feature_extractor = SentenceTokensFeatureExtractor()
         result_tuple = _sentence_feature_extractor.extract_features(instance)
         # malformed instance
         if result_tuple is None:
-            return (None,None,None)
+            return (None,None,None,None)
 
         category,word,tokens,sentence,_old_word = result_tuple
 
         # if word is non english token then return None
         if not self.english_filter.filter(word):
-            return (None,None,None)
+            return (None,None,None,None)
 
         # if using test instance
         if category is None and word is None:
@@ -224,7 +224,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             else:
                 feature_dict = self.getKSequenceModel(result_tuple)
 
-            return (feature_dict,None, None)
+            return (feature_dict,None, None,None)
 
 
         tokens_set = set(tokens)
@@ -285,7 +285,7 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         if not category is None:
             category = category.strip()
 
-        return (feature_dict,category,word)
+        return (feature_dict,category,word,sentence)
 
     # method to place feature value for W0 as NP if its a multiword NP
     def update_feature_dict(self, feature_dict, word, old_word,index):
