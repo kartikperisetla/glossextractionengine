@@ -11,15 +11,19 @@ import re,nltk
 
 KPARAM = "ALL"
 
-# defines the length of n-gram to be considered in the context as prime feature of the instance
+# defines the length of n-gram to be considered in the context as prime feature
+# of the instance
 PRIME_FEATURE_LENGTH = 4
 
-# class that extracts contextual features based on Part of speech tags around the word of interest
+# class that extracts contextual features based on Part of speech tags around
+# the word of interest
 class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
     # params:
     # k_param: the length n in n-grams to be considered in the context window
-    # prime_feature_length: the length of context window pos tags of words falling in that window will constitute the prime feature
-    # add_prime_feature: boolean flag to indicate whether to generate prime feature
+    # prime_feature_length: the length of context window pos tags of words
+    # falling in that window will constitute the prime feature
+    # add_prime_feature: boolean flag to indicate whether to generate prime
+    # feature
     def __init__(self, k_param, prime_feature_length=PRIME_FEATURE_LENGTH, add_prime_feature=False):
         self.k_param = k_param
         self.prime_feature_length = prime_feature_length
@@ -47,8 +51,8 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             feature_dict[key] = val
         return feature_dict
 
-    # method that generates sequence model considering only k words from beginning of the line
-    # params- result_tuple with category, word, tokens
+    # method that generates sequence model considering only k words from
+    # beginning of the line params- result_tuple with category, word, tokens
     # returns a dictionary with features
     def getKSequenceModel(self, result_tuple):
         category,word,tokens,sentence,_old_word = result_tuple
@@ -65,7 +69,8 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             feature_dict[key] = val
         return feature_dict
 
-    # method that gives start and end index of tokens to be considered for sequence model if NP lies in first half of the sentence
+    # method that gives start and end index of tokens to be considered for
+    # sequence model if NP lies in first half of the sentence
     def getIndicesFirstHalf(self,index,num_of_tokens):
         self.debug("num_of_tokens:"+str(num_of_tokens))
         self.debug("index got in getIndicesFirstHalf:"+str(index))
@@ -82,7 +87,8 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         end_index = index + self.k_param
         return (start_index,end_index)
 
-    # method that gives start and end index of tokens to be considered for sequence model if NP lies in second half of the sentence
+    # method that gives start and end index of tokens to be considered for
+    # sequence model if NP lies in second half of the sentence
     def getIndicesSecondHalf(self,index,num_of_tokens):
         if num_of_tokens<self.k_param:
             start_index = 0
@@ -95,7 +101,8 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         end_index = index+1
         return (start_index,end_index)
 
-    # method that gives start and end index of tokens to be considered for sequence model if NP lies at middle of the sentence
+    # method that gives start and end index of tokens to be considered for
+    # sequence model if NP lies at middle of the sentence
     def getIndicesForMiddleWord(self,index,num_of_tokens):
         if num_of_tokens<self.k_param:
             start_index = 0
@@ -111,7 +118,8 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
         return (start_index,end_index)
 
     # method that reads tokens and returns feature_dict
-    def getSequenceModelForIndexRange(self,result_tuple,index,start_index,end_index):
+    def getSequenceModelForIndexRange(self,result_tuple,index,start_index,
+                                      end_index):
         category,word,tokens,sentence,_old_word = result_tuple
         pos_tags = nltk.pos_tag(tokens)
 
@@ -150,14 +158,16 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
             key="prime_feature"
             val=""
             if start_index==index:
-                for i in range(index,min(len(pos_tags),index+self.prime_feature_length)):
+                for i in range(index,min(len(pos_tags),index+
+                        self.prime_feature_length)):
                     wrd,p_tg=pos_tags[i]
                     # if curr token is head NP use HNP as pos tag
                     if i==index:
                         p_tg = "HNP"
                     val=val+p_tg+" "
             elif end_index-1==index:
-                self.debug("STR:"+str(index-self.prime_feature_length)+" END:"+str(index+1))
+                self.debug("STR:"+str(index-self.prime_feature_length)+
+                           " END:"+str(index+1))
                 for i in range(max(0,index-self.prime_feature_length),index+1):
                     wrd,p_tg=pos_tags[i]
                     # if curr token is head NP use HNP as pos tag
@@ -168,7 +178,8 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                 while(end_index-start_index>=self.prime_feature_length):
                     start_index=start_index+1
                     end_index=end_index-1
-                    self.debug("MIDDLE_start_index:"+str(start_index)+" end_index:"+str(end_index))
+                    self.debug("MIDDLE_start_index:"+str(start_index)+
+                               " end_index:"+str(end_index))
                 for i in range(start_index,end_index):
                     wrd,p_tg=pos_tags[i]
                     # if curr token is head NP use HNP as pos tag
@@ -177,7 +188,8 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
                     val=val+p_tg+" "
             feature_dict[key]=val.strip()
 
-            # adding prime feature for beginning and ending of the sentence as well
+            # adding prime feature for beginning and ending of the sentence
+            # as well
             # for beginning
             beg_pattern = " "
             for k in range(0, min(self.prime_feature_length,len(pos_tags))):
@@ -191,7 +203,8 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
             # for ending
             end_pattern = " "
-            for k in range(max(0,len(pos_tags)-self.prime_feature_length), len(pos_tags)):
+            for k in range(max(0,len(pos_tags)-self.prime_feature_length),
+                           len(pos_tags)):
                 wrd,p_tg=pos_tags[k]
                 if k==index:
                     p_tg = "HNP"
@@ -200,9 +213,11 @@ class POSContextSequenceFeatureExtractor(BaseFeatureExtractor):
 
         return feature_dict
 
-    # method that takes instance as input and returns feature vector and optional category label
+    # method that takes instance as input and returns feature vector and
+    # optional category label
     # params: instance of format- <category> '<instance_name> | <instance>
-    # returns: a tuple of (<feature_dict>, <category>, <word>, <sentence>) or a list of such tuples
+    # returns: a tuple of (<feature_dict>, <category>, <word>, <sentence>)
+    # or a list of such tuples
     def extract_features(self, instance):
         _sentence_feature_extractor = SentenceTokensFeatureExtractor()
         result_tuple = _sentence_feature_extractor.extract_features(instance)
