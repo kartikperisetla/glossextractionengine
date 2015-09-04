@@ -1,4 +1,4 @@
-# GlossExtractionEngine
+## GlossExtractionEngine
 
 It is a framework to extract definitional sentences from large datasets. 
 
@@ -7,19 +7,19 @@ The core of the framework is based on the filters, transformations, parsers, fea
 The framework comes packaged with:
 
 
-1. ## Filters: 
+1. ### Filters: 
 	Basic sentence length filter.
 
-2. ## Transformations: 
+2. ### Transformations: 
 	Lowercase transformation, remove non alphanumeric transformation, remove non english tokens, wiktionary definition transformation
 
-3. ## Parsers: 
+3. ### Parsers: 
 	Wikipedia parser flow as the map-reduce paradigm.
 
-4. ## Samplers: 
+4. ### Samplers: 
 	Random sampler(basic random sampler implementation)
 
-5. ## Feature Extractors: 
+5. ### Feature Extractors: 
 	**SentenceTokensFeatureExtractor**: extracts basic sentence features like tokens
 
 	**POSContextSequenceFeatureExtractor**: extracts contextual features based on Part of speech tags around the word of interest(head noun phrase)
@@ -28,28 +28,36 @@ The framework comes packaged with:
 
 	**MaltParsedPOSContextSequenceFeatureExtractor**: extracts contextual features based on Part of speech tags around the word of interest for sentences that are parsed with malt parser( i.e tokens in sentence have pos tags with them)
 
-6. ## Interfaces: You can interact with samplers and feature extractors through a simple commands.
+6. ### Interfaces: You can interact with samplers and feature extractors through a simple commands.
 	**SamplingInterface**: to interact with Samplers
 	
-        *python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>* 
+        ```
+    	python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>
+    	```
 	
 
 	**FeatureExtractionInterface**: to interact with Feature Extractors
 	
-	*python feature_extraction_interface.py -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size>*
+		```
+		python feature_extraction_interface.py -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size>
+		```
 
-7. ## Single-point-of-Interaction: You can interact with framework through a single point which interacts with components to perform operations.
+7. ### Single-point-of-Interaction: You can interact with framework through a single point which interacts with components to perform operations.
 
 	**run.py** : you can interact with samplers and feature extractors through this.
 
-	*python run.py -operation <operation_name> <parameters for operation>*
+	```
+	python run.py -operation <operation_name> <parameters for operation>
+	```
 
 	**supported operations(NOTE: Use operation name without quotes)**
 
 	*(1) operation name: 'sampling' , parameters: -sampler <sampler_implementation>  -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>*
 
 	Example:
+	```
 		> python glossextractionengine/run.py -operation sampling -sampler lib.sampler.random_sampler.RandomSampler -positive final_dataset/positive_instances -negative final_dataset/negative_instances -train_size 200 -test_size 10
+	```
 
 	*(2) operation name: 'extract_features' , parameters: -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size> -sampler <sampler_implementation>*
 
@@ -57,10 +65,14 @@ The framework comes packaged with:
 		-you will get a directory named 'feature_set_for_modeling' as the output in 'extract_features' mode of operation
 
 	Example: using feature extractors provided by framework:
+	```
 		> python glossextractionengine/run.py -operation extract_features -fe_mapper glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py  -fe_reducer glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -train_dataset final_dataset/ -train_size 200 -test_size 10 -positive final_dataset/positive_instances  -negative final_dataset/negative_instances -sampler lib.sampler.random_sampler.RandomSampler
+	```
 
 	Example: using your own custom feature extractors:
+	```
 		> python glossextractionengine/run.py -operation extract_features -fe_mapper kartik_fe_map.py -fe_reducer kartik_fe_red.py  -train_dataset final_dataset/ -train_size 200 -test_size 10 -sampler lib.sampler.random_sampler.RandomSampler -positive final_dataset/positive_instances -negative final_dataset/negative_instances
+	```
 
 
 	*(3) operation name: 'modeling'*
@@ -69,7 +81,7 @@ The framework comes packaged with:
 		if you want to generate model for one feature set file:
 
 
-		parameters: *-feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>*
+		*parameters: -feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>*
 		
 
 		if you want to generate models for different feature set files:
@@ -77,14 +89,18 @@ The framework comes packaged with:
 		parameters: *-feature_set_location <feature_set_location_directory>*
 
 	Example:	
+	```
 		> python glossextractionengine/run.py  -operation modeling -feature_set_location feature_set_for_modeling/
+	```
 
 	*(4) operation name: 'classification' , parameters: -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location> -model <model_file>*
 
 		--> if you want to provide custom parameters to mapper and reducer for classification operation, just remember that model file will be the first parameter to them followed by custom parameters
 
 	Example:
+	```
 		> python glossextractionengine/run.py -operation classification -cl_mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py  -cl_reducer glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -test_dataset test_data/ -model trained_models/200_output.model
+	```
 
 	*(5) operation name: 'default' , parameters: 
 
