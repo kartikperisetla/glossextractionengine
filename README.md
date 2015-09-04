@@ -4,8 +4,7 @@ It is a framework to extract definitional sentences from large datasets.
 
 The core of the framework is based on the filters, transformations, parsers, feature extractors, samplers and modelers you use. Thus it is extensible and customizable for your needs. All you need to do is extend the base functionatlity and write your own filters, transformations, parsers, feature extractors, samplers and modelers. 
 
-The framework comes packaged with:
-
+The framework provides components for your NLP pipeline, you can extend these components according to your task and datasource:
 
 1. ### Filters: 
 	Basic sentence length filter.
