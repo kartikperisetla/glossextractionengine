@@ -31,16 +31,13 @@ The framework comes packaged with:
 6. ### Interfaces: You can interact with samplers and feature extractors through a simple commands.
 	**SamplingInterface**: to interact with Samplers
 	
-        ```
-    	python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>
-    	```
+     	python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>
+    	
 	
 
 	**FeatureExtractionInterface**: to interact with Feature Extractors
 	
-		```
 		python feature_extraction_interface.py -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size>
-		```
 
 7. ### Single-point-of-Interaction: You can interact with framework through a single point which interacts with components to perform operations.
 
@@ -56,7 +53,7 @@ The framework comes packaged with:
 
 	Example:
 	```
-		> python glossextractionengine/run.py -operation sampling -sampler lib.sampler.random_sampler.RandomSampler -positive final_dataset/positive_instances -negative final_dataset/negative_instances -train_size 200 -test_size 10
+	python glossextractionengine/run.py -operation sampling -sampler lib.sampler.random_sampler.RandomSampler -positive final_dataset/positive_instances -negative final_dataset/negative_instances -train_size 200 -test_size 10
 	```
 
 	*(2) operation name: 'extract_features' , parameters: -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size> -sampler <sampler_implementation>*
@@ -66,12 +63,12 @@ The framework comes packaged with:
 
 	Example: using feature extractors provided by framework:
 	```
-		> python glossextractionengine/run.py -operation extract_features -fe_mapper glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py  -fe_reducer glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -train_dataset final_dataset/ -train_size 200 -test_size 10 -positive final_dataset/positive_instances  -negative final_dataset/negative_instances -sampler lib.sampler.random_sampler.RandomSampler
+	python glossextractionengine/run.py -operation extract_features -fe_mapper glossextractionengine/lib/mapreduce/feature_extraction_flow_mapper.py  -fe_reducer glossextractionengine/lib/mapreduce/feature_extraction_flow_reducer.py -train_dataset final_dataset/ -train_size 200 -test_size 10 -positive final_dataset/positive_instances  -negative final_dataset/negative_instances -sampler lib.sampler.random_sampler.RandomSampler
 	```
 
 	Example: using your own custom feature extractors:
 	```
-		> python glossextractionengine/run.py -operation extract_features -fe_mapper kartik_fe_map.py -fe_reducer kartik_fe_red.py  -train_dataset final_dataset/ -train_size 200 -test_size 10 -sampler lib.sampler.random_sampler.RandomSampler -positive final_dataset/positive_instances -negative final_dataset/negative_instances
+	python glossextractionengine/run.py -operation extract_features -fe_mapper kartik_fe_map.py -fe_reducer kartik_fe_red.py  -train_dataset final_dataset/ -train_size 200 -test_size 10 -sampler lib.sampler.random_sampler.RandomSampler -positive final_dataset/positive_instances -negative final_dataset/negative_instances
 	```
 
 
@@ -90,7 +87,7 @@ The framework comes packaged with:
 
 	Example:	
 	```
-		> python glossextractionengine/run.py  -operation modeling -feature_set_location feature_set_for_modeling/
+	python glossextractionengine/run.py  -operation modeling -feature_set_location feature_set_for_modeling/
 	```
 
 	*(4) operation name: 'classification' , parameters: -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location> -model <model_file>*
@@ -99,17 +96,17 @@ The framework comes packaged with:
 
 	Example:
 	```
-		> python glossextractionengine/run.py -operation classification -cl_mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py  -cl_reducer glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -test_dataset test_data/ -model trained_models/200_output.model
+	python glossextractionengine/run.py -operation classification -cl_mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py  -cl_reducer glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -test_dataset test_data/ -model trained_models/200_output.model
 	```
 
-	*(5) operation name: 'default' , parameters: 
+	*(5) operation name: 'default' , parameters: *
 
 			-fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size> -sampler <sampler_implementation> -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location>
 
 			OR
 
 			-fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size> -sampler <sampler_implementation> -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location>
-	*
+	
 
 			This mode basically executes the default behavior/flow of the framework. i.e. it handles sampling, feature extraction, modeling and classification flows for you with just single command.
 
