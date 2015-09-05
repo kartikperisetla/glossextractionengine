@@ -7,18 +7,20 @@ The core of the framework is based on the filters, transformations, parsers, fea
 The framework provides components for your NLP pipeline, you can extend these components according to your task and datasource:
 
 1. #### Filters: 
-	Basic sentence length filter.
+	Basic sentence level filters. eg. length filter, english token filter, etc.
 
 2. #### Transformations: 
-	Lowercase transformation, remove non alphanumeric transformation, remove non english tokens, wiktionary definition transformation
+	Basic token level components(called as 'transformers') that transforms tokens. eg. Lowercase transformation, remove non alphanumeric transformation, remove non english tokens, wiktionary definition transformation
 
 3. #### Parsers: 
-	Wikipedia parser flow as the map-reduce paradigm.
+	Basic Parsers. eg. Wikipedia parser- to parse wikipedia articles
 
 4. #### Samplers: 
-	Random sampler(basic random sampler implementation)
+	Basic components to sample instances from a pool of instances. eg. Random sampler(basic random sampler implementation)
 
 5. #### Feature Extractors: 
+	Basic feature extractors for your NLP tasks. eg.
+
 	**SentenceTokensFeatureExtractor**: extracts basic sentence features like tokens
 
 	**POSContextSequenceFeatureExtractor**: extracts contextual features based on Part of speech tags around the word of interest(head noun phrase)
@@ -27,18 +29,19 @@ The framework provides components for your NLP pipeline, you can extend these co
 
 	**MaltParsedPOSContextSequenceFeatureExtractor**: extracts contextual features based on Part of speech tags around the word of interest for sentences that are parsed with malt parser( i.e tokens in sentence have pos tags with them)
 
-6. #### Interfaces: You can interact with samplers and feature extractors through a simple commands.
+6. #### Interfaces:
+	You can interact with samplers and feature extractors through a simple commands.
 	**SamplingInterface**: to interact with Samplers
 	
      	python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>
     	
 	
-
 	**FeatureExtractionInterface**: to interact with Feature Extractors
 	
 		python feature_extraction_interface.py -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size>
 
-7. #### Single-point-of-Interaction: You can interact with framework through a single point which interacts with components to perform operations.
+7. #### Single-point-of-Interaction: 
+	You can interact with framework through a single point which interacts with components to perform operations.
 
 	**run.py** : you can interact with samplers and feature extractors through this.
 
@@ -93,7 +96,7 @@ The framework provides components for your NLP pipeline, you can extend these co
 
 	*(4) operation name: 'classification' , parameters: -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location> -model <model_file>*
 
-		--> if you want to provide custom parameters to mapper and reducer for classification operation, just remember that model file will be the first parameter to them followed by custom parameters
+		if you want to provide custom parameters to mapper and reducer for classification operation, just remember that model file will be the first parameter to them followed by custom parameters
 
 	Example:
 	```
@@ -143,5 +146,4 @@ The framework provides components for your NLP pipeline, you can extend these co
 	-test_dataset : option to specify where your test dataset is located on local file system.
 			
 	-model : option to specify the model to be used for the classification task.( give the location where your model will be generated )
-	```
-			
+	```		
