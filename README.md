@@ -6,19 +6,19 @@ The core of the framework is based on the filters, transformations, parsers, fea
 
 The framework provides components for your NLP pipeline, you can extend these components according to your task and datasource:
 
-1. ### Filters: 
+1. #### Filters: 
 	Basic sentence length filter.
 
-2. ### Transformations: 
+2. #### Transformations: 
 	Lowercase transformation, remove non alphanumeric transformation, remove non english tokens, wiktionary definition transformation
 
-3. ### Parsers: 
+3. #### Parsers: 
 	Wikipedia parser flow as the map-reduce paradigm.
 
-4. ### Samplers: 
+4. #### Samplers: 
 	Random sampler(basic random sampler implementation)
 
-5. ### Feature Extractors: 
+5. #### Feature Extractors: 
 	**SentenceTokensFeatureExtractor**: extracts basic sentence features like tokens
 
 	**POSContextSequenceFeatureExtractor**: extracts contextual features based on Part of speech tags around the word of interest(head noun phrase)
@@ -27,7 +27,7 @@ The framework provides components for your NLP pipeline, you can extend these co
 
 	**MaltParsedPOSContextSequenceFeatureExtractor**: extracts contextual features based on Part of speech tags around the word of interest for sentences that are parsed with malt parser( i.e tokens in sentence have pos tags with them)
 
-6. ### Interfaces: You can interact with samplers and feature extractors through a simple commands.
+6. #### Interfaces: You can interact with samplers and feature extractors through a simple commands.
 	**SamplingInterface**: to interact with Samplers
 	
      	python sample_interface.py -sampler <sampler_implementation> -positive <positive_source_file> -negative <negative_source_file> -train_size <train_set_size> -test_size <test_set_size>
@@ -38,7 +38,7 @@ The framework provides components for your NLP pipeline, you can extend these co
 	
 		python feature_extraction_interface.py -fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size>
 
-7. ### Single-point-of-Interaction: You can interact with framework through a single point which interacts with components to perform operations.
+7. #### Single-point-of-Interaction: You can interact with framework through a single point which interacts with components to perform operations.
 
 	**run.py** : you can interact with samplers and feature extractors through this.
 
@@ -74,15 +74,17 @@ The framework provides components for your NLP pipeline, you can extend these co
 	*(3) operation name: 'modeling'*
 
 
-		if you want to generate model for one feature set file:
+	if you want to generate model for one feature set file:
 
+	```
+	parameters: -feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>
+	```
 
-		*parameters: -feature_set_location <feature_set_file_location> -model_name <model_name_to_save_as>*
-		
+	if you want to generate models for different feature set files:
 
-		if you want to generate models for different feature set files:
-
-		parameters: *-feature_set_location <feature_set_location_directory>*
+	```
+	parameters: *-feature_set_location <feature_set_location_directory>
+	```
 
 	Example:	
 	```
@@ -98,7 +100,7 @@ The framework provides components for your NLP pipeline, you can extend these co
 	python glossextractionengine/run.py -operation classification -cl_mapper glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_mapper.py  -cl_reducer glossextractionengine/lib/mapreduce/malt_parsed_feature_extraction_flow_reducer.py -test_dataset test_data/ -model trained_models/200_output.model
 	```
 
-	*(5) operation name: 'default' , parameters: *
+	(5) operation name: 'default' , parameters:
 
 	```
 	-fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size> -sampler <sampler_implementation> -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location>
