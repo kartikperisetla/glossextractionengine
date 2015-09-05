@@ -100,41 +100,46 @@ The framework provides components for your NLP pipeline, you can extend these co
 
 	*(5) operation name: 'default' , parameters: *
 
-			-fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size> -sampler <sampler_implementation> -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location>
+	```
+	-fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size> -sampler <sampler_implementation> -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location>
+	```
 
-			OR
+	OR
 
-			-fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size> -sampler <sampler_implementation> -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location>
+	```
+	-fe_mapper <feature_extraction_mapper> -fe_mapper_params  <mapper_params> -fe_reducer <feature_extraction_reducer> -fe_reducer_params <reducer_params> -train_dataset <dataset_location> -train_size <train_set_size> -test_size <test_set_size> -sampler <sampler_implementation> -cl_mapper <classification_mapper> -cl_mapper_params <mapper_params> -cl_reducer <classification_reducer> -cl_reducer_params <reducer_params> -test_dataset <dataset_location>
+	```
 	
 
-		This mode basically executes the default behavior/flow of the framework. i.e. it handles sampling, feature extraction, modeling and classification flows for you with just single command.
+	This mode basically executes the default behavior/flow of the framework. i.e. it handles sampling, feature extraction, modeling and classification flows for you with just single command.
 
-			-fe_mapper : option to indicate is the mapper you want to use for feature extraction task
+	```
+	-fe_mapper : option to indicate is the mapper you want to use for feature extraction task
 
-			-fe_mapper_params : option to indicate the custom parameters you want to pass to the feature extraction mapper. parameters must be separated by #. For example: 4#4#True
+	-fe_mapper_params : option to indicate the custom parameters you want to pass to the feature extraction mapper. parameters must be separated by #. For example: 4#4#True
 
-			-fe_reducer : option to indicate the reducer you want to use for feature extraction task
+	-fe_reducer : option to indicate the reducer you want to use for feature extraction task
 
-			-fe_reducer_params : option to indicate the custom parameters you want to pass to the feature extraction reducer. parameters must be separated by #. For example: 4#4#True
+	-fe_reducer_params : option to indicate the custom parameters you want to pass to the feature extraction reducer. parameters must be separated by #. For example: 4#4#True
 
-			-train_dataset : option to specify location on file system where training dataset is present.
+	-train_dataset : option to specify location on file system where training dataset is present.
 
-			-train_size : option to specify the size of sampled training set you want to generate through sampling algorithm on actual training dataset.
+	-train_size : option to specify the size of sampled training set you want to generate through sampling algorithm on actual training dataset.
 
-			-test_size : option to specify the size of sampled test set you want to generate through sampling algorithm on actual training dataset( useful in cross validation).
+	-test_size : option to specify the size of sampled test set you want to generate through sampling algorithm on actual training dataset( useful in cross validation).
 
-			-sampler : option to indicate the sampler implementation you want to use for sampling.
+	-sampler : option to indicate the sampler implementation you want to use for sampling.
 
-			-cl_mapper : option to indicate is the mapper you want to use for classification task.
+	-cl_mapper : option to indicate is the mapper you want to use for classification task.
 
-			-cl_mapper_params :option to indicate the custom parameters you want to pass to the classification mapper. parameters must be separated by #. For example: 4#4#True
+	-cl_mapper_params :option to indicate the custom parameters you want to pass to the classification mapper. parameters must be separated by #. For example: 4#4#True
 
-			-cl_reducer : option to indicate the reducer you want to use for classification task
+	-cl_reducer : option to indicate the reducer you want to use for classification task
 
-			-cl_reducer_params : option to indicate the custom parameters you want to pass to the classification reducer. parameters must be separated by #. For example: 4#4#True
+	-cl_reducer_params : option to indicate the custom parameters you want to pass to the classification reducer. parameters must be separated by #. For example: 4#4#True
 
-			-test_dataset : option to specify where your test dataset is located on local file system.
+	-test_dataset : option to specify where your test dataset is located on local file system.
 			
-			-model : option to specify the model to be used for the classification task.( give the location where your model will be generated )
-
+	-model : option to specify the model to be used for the classification task.( give the location where your model will be generated )
+	```
 			
