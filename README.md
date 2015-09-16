@@ -1,4 +1,4 @@
--------------------------------------------------------------
+```
 GlossExtractionEngine
 Copyright (c) Kartik Perisetla, 2015
 kperisetla@cmu.edu
@@ -16,7 +16,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with GlossExtractionEngine.  If not, see <http://www.gnu.org/licenses/>.
--------------------------------------------------------------
+```
 
 ## GlossExtractionEngine
 
