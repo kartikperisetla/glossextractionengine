@@ -1,8 +1,8 @@
 ```
 GlossExtractionEngine
-Copyright (c) Kartik Perisetla, Carnegie Mellon University, 2015
-kperisetla@cmu.edu
-This work was done during my Masters at Carnegie Mellon University under Professor William Cohen.
+-Kartik Perisetla, Carnegie Mellon University, 2015
+-kperisetla@cmu.edu
+-This work was done during my Masters at Carnegie Mellon University under Professor William Cohen.
 
 GlossExtractionEngine is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
